@@ -77,9 +77,6 @@ export default function LatestAINewsPage() {
               <span className="px-2.5 py-0.5 rounded bg-indigo-600 text-white font-bold text-[10px] sm:text-[11px] uppercase tracking-wider">
                 Featured Report
               </span>
-              <span className="px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold text-[11px] sm:text-xs">
-                {featuredNews.category}
-              </span>
             </div>
 
             <div className="flex items-center gap-3 text-[11px] sm:text-xs text-slate-500 font-medium">

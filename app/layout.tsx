@@ -10,6 +10,13 @@ export const metadata: Metadata = {
   title: 'TokenFlight — AI & Token Engineering Notes',
   description: 'First-principles engineering notes, visual architectural breakdowns, and code implementations covering LLMs, Transformers, RAG, and Machine Learning.',
   keywords: ['TokenFlight', 'AI Blog', 'Machine Learning', 'Transformers', 'LLM', 'Tokenization', 'BPE'],
+  icons: {
+    icon: [
+      { url: '/app-logo.png', type: 'image/png' },
+    ],
+    shortcut: '/app-logo.png',
+    apple: '/app-logo.png',
+  },
 };
 
 export default function RootLayout({
