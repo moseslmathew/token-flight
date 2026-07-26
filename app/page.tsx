@@ -180,10 +180,13 @@ export default function LatestAINewsPage() {
                 <span className="font-semibold px-2.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 text-xs">
                   {item.category}
                 </span>
-                <span className="text-xs text-slate-400 font-medium">• {item.publishedAt}</span>
               </div>
 
-              <div className="flex items-center gap-3 text-xs text-slate-500 font-medium">
+              <div className="flex items-center gap-3.5 text-xs text-slate-500 font-medium flex-wrap">
+                <span className="flex items-center gap-1">
+                  <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                  {item.publishedAt}
+                </span>
                 <span className="flex items-center gap-1">
                   <Clock className="w-3.5 h-3.5 text-slate-400" />
                   {item.readTime}

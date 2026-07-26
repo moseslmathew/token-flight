@@ -2,9 +2,8 @@
 
 import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Newspaper } from 'lucide-react';
+import { BookOpen, Newspaper, Send } from 'lucide-react';
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -17,13 +16,9 @@ export default function Navbar() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
         {/* Brand Logo */}
         <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-          <Image
-            src="/app-logo.png"
-            alt="TokenFlight Logo"
-            width={32}
-            height={32}
-            className="w-8 h-8 rounded-xl object-cover shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-200"
-          />
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-200">
+            <Send className="w-4 h-4 transform -rotate-12 translate-x-[-1px] translate-y-[1px]" />
+          </div>
           <span className="font-black text-lg sm:text-xl tracking-tight text-slate-900">
             Token<span className="text-indigo-600">Flight</span>
           </span>

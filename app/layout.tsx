@@ -11,11 +11,9 @@ export const metadata: Metadata = {
   description: 'First-principles engineering notes, visual architectural breakdowns, and code implementations covering LLMs, Transformers, RAG, and Machine Learning.',
   keywords: ['TokenFlight', 'AI Blog', 'Machine Learning', 'Transformers', 'LLM', 'Tokenization', 'BPE'],
   icons: {
-    icon: [
-      { url: '/app-logo.png', type: 'image/png' },
-    ],
-    shortcut: '/app-logo.png',
-    apple: '/app-logo.png',
+    icon: '/icon.svg',
+    shortcut: '/icon.svg',
+    apple: '/icon.svg',
   },
 };
 
