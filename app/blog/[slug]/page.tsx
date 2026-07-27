@@ -80,13 +80,13 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
             </div>
 
             {sec.visual && (
-              <div className="measure-wide mt-10">
+              <div className="measure mt-10">
                 <ArticleVisual id={sec.visual} />
               </div>
             )}
 
             {sec.codeSnippet && (
-              <figure className="measure-wide mt-10 overflow-hidden rounded-xl bg-code-bg">
+              <figure className="measure mt-10 overflow-hidden rounded-xl bg-code-bg">
                 <figcaption className="flex items-center justify-between border-b border-white/8 px-5 py-2.5">
                   <span className="eyebrow text-code-faint">{sec.codeSnippet.language}</span>
                 </figcaption>
