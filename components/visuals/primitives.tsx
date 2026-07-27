@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { Play, Pause, RotateCcw, Sparkles } from 'lucide-react';
 
 /* ────────────────────────────────────────────────────────────
@@ -39,6 +39,32 @@ export function useInView<T extends HTMLElement>() {
   }, []);
   return [ref, inView] as const;
 }
+
+/**
+ * Tracks whether an element is currently on screen — continuously, unlike
+ * useInView, which latches on first sight. Explainers use this so a scene
+ * starts when the reader actually reaches it rather than on page load.
+ */
+export function useVisible<T extends HTMLElement>() {
+  const ref = useRef<T>(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), {
+      rootMargin: '-12% 0px -12% 0px',
+      threshold: 0,
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+  return [ref, visible] as const;
+}
+
+/** Defaults to true so a visual rendered outside the registry still animates. */
+const VisualVisibilityContext = React.createContext(true);
+export const VisualVisibilityProvider = VisualVisibilityContext.Provider;
+export const useVisualVisible = () => useContext(VisualVisibilityContext);
 
 export function useTicker(playing: boolean, interval: number) {
   const [tick, setTick] = useState(0);

@@ -6,9 +6,12 @@ import {
   VisualFrame,
   PlayButton,
   Connector,
+  VisualVisibilityProvider,
   useReducedMotion,
   useInView,
   useTicker,
+  useVisible,
+  useVisualVisible,
 } from './visuals/primitives';
 import { EMBEDDING_VISUALS } from './visuals/embeddings';
 
@@ -20,8 +23,9 @@ const DVS_TOKENS = ['The', 'cat', 'sat', 'on', 'the', 'mat'];
 
 function DenseVsSparse() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [playing, setPlaying] = useState(true);
-  const tick = useTicker(playing && !reduced, 1600);
+  const tick = useTicker(playing && visible && !reduced, 1600);
   const [flash, setFlash] = useState(true);
 
   useEffect(() => {
@@ -155,12 +159,13 @@ const ROUTER_STEPS = [
 
 function RouterFlow() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [playing, setPlaying] = useState(true);
   const [step, setStep] = useState(0);
   const [tokenIdx, setTokenIdx] = useState(0);
 
   useEffect(() => {
-    if (!playing || reduced) return;
+    if (!playing || reduced || !visible) return;
     const id = setTimeout(
       () => {
         if (step < ROUTER_STEPS.length - 1) {
@@ -173,7 +178,7 @@ function RouterFlow() {
       step === ROUTER_STEPS.length - 1 ? 2600 : 1700,
     );
     return () => clearTimeout(id);
-  }, [playing, reduced, step, tokenIdx]);
+  }, [playing, reduced, visible, step, tokenIdx]);
 
   const token = ROUTER_TOKENS[tokenIdx];
   const ranked = useMemo(
@@ -357,10 +362,11 @@ const EXPERT_COUNTS = [8, 16, 32, 64, 128];
 
 function TopKGrid() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [total, setTotal] = useState(64);
   const [k, setK] = useState(2);
   const [playing, setPlaying] = useState(true);
-  const tick = useTicker(playing && !reduced, 1100);
+  const tick = useTicker(playing && visible && !reduced, 1100);
 
   const active = useMemo(() => {
     const picks = new Set<number>();
@@ -480,12 +486,13 @@ const SENTENCES: { words: string[]; route: number[] }[] = [
 
 function ContextRouting() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [playing, setPlaying] = useState(true);
   const flat = useMemo(
     () => SENTENCES.flatMap((s, si) => s.words.map((_, wi) => ({ si, wi }))),
     [],
   );
-  const tick = useTicker(playing && !reduced, 620);
+  const tick = useTicker(playing && visible && !reduced, 620);
   const pos = flat[tick % flat.length];
   const visitedUpTo = tick % flat.length;
   const activeExpert = SENTENCES[pos.si].route[pos.wi];
@@ -563,18 +570,19 @@ const BALANCED = [13, 12, 13, 12, 13, 12, 13, 12];
 
 function LoadBalance() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [mode, setMode] = useState<'collapse' | 'balanced'>('collapse');
   const base = mode === 'collapse' ? COLLAPSE : BALANCED;
   const [vals, setVals] = useState(base);
 
   useEffect(() => {
     setVals(base);
-    if (reduced) return;
+    if (reduced || !visible) return;
     const id = setInterval(() => {
       setVals(base.map((v) => Math.max(0.4, v + (Math.random() - 0.5) * (v > 5 ? 2.4 : 0.8))));
     }, 1100);
     return () => clearInterval(id);
-  }, [mode, reduced]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [mode, reduced, visible]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const max = Math.max(...vals);
   const idle = vals.filter((v) => v < 3).length;
@@ -786,6 +794,13 @@ const VISUALS: Record<string, React.ComponentType> = {
 
 export default function ArticleVisual({ id }: { id: string }) {
   const Component = VISUALS[id];
+  const [ref, visible] = useVisible<HTMLDivElement>();
   if (!Component) return null;
-  return <Component />;
+  return (
+    <div ref={ref}>
+      <VisualVisibilityProvider value={visible}>
+        <Component />
+      </VisualVisibilityProvider>
+    </div>
+  );
 }

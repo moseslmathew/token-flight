@@ -8,6 +8,7 @@ import {
   Connector,
   useReducedMotion,
   useTicker,
+  useVisualVisible,
   clamp,
 } from './primitives';
 
@@ -72,8 +73,9 @@ const PIPELINE_CAPTIONS = [
 
 function Pipeline() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [playing, setPlaying] = useState(true);
-  const tick = useTicker(playing && !reduced, 1500);
+  const tick = useTicker(playing && visible && !reduced, 1500);
   const phase = tick % 4;
 
   const Station = ({
@@ -182,6 +184,7 @@ const TOKENIZE_STEPS = [
 
 function Tokenize() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [playing, setPlaying] = useState(true);
   const [step, setStep] = useState(0);
   const [typed, setTyped] = useState(0);
@@ -196,7 +199,9 @@ function Tokenize() {
       setTyped(SENTENCE.length);
       return;
     }
+    // Hold at zero until the reader arrives, so they see it typed out.
     setTyped(0);
+    if (!visible) return;
     const id = setInterval(() => {
       setTyped((n) => {
         if (n >= SENTENCE.length) {
@@ -207,14 +212,14 @@ function Tokenize() {
       });
     }, 55);
     return () => clearInterval(id);
-  }, [step, reduced]);
+  }, [step, reduced, visible]);
 
   useEffect(() => {
-    if (!playing || reduced) return;
+    if (!playing || reduced || !visible) return;
     const hold = step === 0 ? 3200 : step === TOKENIZE_STEPS.length - 1 ? 3600 : 2600;
     const id = setTimeout(() => setStep((s) => (s + 1) % TOKENIZE_STEPS.length), hold);
     return () => clearTimeout(id);
-  }, [playing, reduced, step]);
+  }, [playing, reduced, visible, step]);
 
   const chips = step >= 2 ? TOKENS : PRE_SPLIT.map((t) => ({ text: t, id: 0, hero: t === 'cat' }));
 
@@ -335,8 +340,9 @@ const VISIBLE_ROWS = 7;
 
 function Vocabulary() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [run, setRun] = useState(0);
-  const [center, setCenter] = useState(reduced ? 2543 : 6);
+  const [center, setCenter] = useState(6);
 
   useEffect(() => {
     if (reduced) {
@@ -344,6 +350,7 @@ function Vocabulary() {
       return;
     }
     setCenter(6);
+    if (!visible) return;
     // Slow crawl through the early entries, then a jump to "cat".
     const crawl = setInterval(() => setCenter((c) => c + 1), 420);
     const leap = setTimeout(() => {
@@ -354,7 +361,7 @@ function Vocabulary() {
       clearInterval(crawl);
       clearTimeout(leap);
     };
-  }, [run, reduced]);
+  }, [run, reduced, visible]);
 
   const settled = center === 2543;
   const rows: number[] = [];
@@ -453,17 +460,18 @@ const MATRIX_COLS = 12;
 
 function Lookup() {
   const reduced = useReducedMotion();
+  const visible = useVisualVisible();
   const [playing, setPlaying] = useState(true);
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-    if (!playing || reduced) return;
+    if (!playing || reduced || !visible) return;
     const id = setTimeout(
       () => setStep((s) => (s + 1) % LOOKUP_STEPS.length),
       step === LOOKUP_STEPS.length - 1 ? 4200 : 2800,
     );
     return () => clearTimeout(id);
-  }, [playing, reduced, step]);
+  }, [playing, reduced, visible, step]);
 
   const showMatrix = step >= 1 && step <= 2;
   const highlight = step >= 2;
@@ -621,11 +629,13 @@ const DIM_MODELS = [
 ];
 
 function Dimensions() {
+  const visible = useVisualVisible();
   const [shown, setShown] = useState(false);
   useEffect(() => {
+    if (!visible) return;
     const id = setTimeout(() => setShown(true), 200);
     return () => clearTimeout(id);
-  }, []);
+  }, [visible]);
 
   return (
     <VisualFrame
@@ -803,11 +813,16 @@ const SPACE_POINTS = [
 
 function SemanticSpace() {
   const reduced = useReducedMotion();
-  const [progress, setProgress] = useState(reduced ? 100 : 0);
-  const [playing, setPlaying] = useState(!reduced);
+  const visible = useVisualVisible();
+  const [progress, setProgress] = useState(0);
+  const [playing, setPlaying] = useState(true);
 
   useEffect(() => {
-    if (!playing || reduced) return;
+    if (reduced) {
+      setProgress(100);
+      return;
+    }
+    if (!playing || !visible) return;
     const id = setInterval(() => {
       setProgress((p) => {
         if (p >= 100) {
@@ -818,7 +833,7 @@ function SemanticSpace() {
       });
     }, 24);
     return () => clearInterval(id);
-  }, [playing, reduced]);
+  }, [playing, reduced, visible]);
 
   const p = clamp(progress / 100, 0, 1);
 
@@ -932,17 +947,19 @@ const RECAP = [
 
 function Recap() {
   const reduced = useReducedMotion();
-  const [run, setRun] = useState(0);
-  const tick = useTicker(!reduced, 700);
-  const shown = reduced ? RECAP.length : Math.min(RECAP.length, tick + 1);
+  const visible = useVisualVisible();
+  const [base, setBase] = useState(0);
+  const tick = useTicker(visible && !reduced, 700);
+  // Replay rebases the counter; without this the sequence never restarts.
+  const shown = reduced ? RECAP.length : Math.min(RECAP.length, tick - base + 1);
 
   return (
     <VisualFrame
       label="That’s a word embedding"
-      action={<ReplayButton onClick={() => setRun((r) => r + 1)} />}
+      action={<ReplayButton onClick={() => setBase(tick)} />}
       caption="Five steps, and only the first two involve anything you would recognise as language."
     >
-      <div key={run} className="flex flex-wrap items-start justify-center gap-x-3 gap-y-5">
+      <div className="flex flex-wrap items-start justify-center gap-x-3 gap-y-5">
         {RECAP.map((item, i) => (
           <React.Fragment key={item.label}>
             {i > 0 && (
