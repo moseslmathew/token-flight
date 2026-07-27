@@ -133,3 +133,19 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+/* Share Menu Pop-In Animation */
+@keyframes share-menu-in {
+  0% {
+    opacity: 0;
+    transform: translateY(4px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.animate-share-menu-in {
+  animation: share-menu-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
