@@ -150,6 +150,44 @@
   animation: share-menu-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+/* Article Visuals: flowing dashed connector between stages */
+@keyframes moe-flow-dash {
+  to {
+    stroke-dashoffset: -24;
+  }
+}
+
+.moe-flow {
+  stroke-dasharray: 6 6;
+  animation: moe-flow-dash 0.7s linear infinite;
+}
+
+/* Article Visuals: token pop-in */
+@keyframes moe-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  60% {
+    transform: scale(1.06);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.moe-pop {
+  animation: moe-pop 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .moe-flow,
+  .moe-pop {
+    animation: none;
+  }
+}
+
 /* Mobile Bottom Sheet Slide-Up Animation */
 @keyframes slide-up {
   0% {

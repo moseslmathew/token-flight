@@ -24,6 +24,8 @@ export interface Article {
         code: string;
       };
       keyTakeaway?: string;
+      /** Key of an animated explainer rendered under this section (see components/ArticleVisual.tsx) */
+      visual?: string;
     }[];
     summary: string;
   };
@@ -126,6 +128,110 @@ def cosine_similarity(vec1, vec2):
         },
       ],
       summary: 'Embeddings are the fundamental language of neural networks, bridging discrete text and continuous mathematical spaces.',
+    },
+  },
+  {
+    id: '6',
+    slug: 'what-is-mixture-of-experts-moe-explained-simply',
+    title: 'What Is a Mixture of Experts? MoE for LLMs, Explained Simply',
+    excerpt: 'Why modern LLMs keep a hundred specialists on staff and wake only two of them for each word — routing, top-K sparsity, load balancing, and the memory bill nobody mentions.',
+    category: 'LLMs',
+    difficulty: 'Beginner',
+    readTime: '9 min read',
+    publishedAt: 'July 2026',
+    author: {
+      name: 'AI Engineering Team',
+      role: 'Research & Technical Writing',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    },
+    tags: ['Mixture of Experts', 'MoE', 'Routing', 'Sparsity', 'Mixtral', 'Architecture'],
+    featured: true,
+    content: {
+      intro: 'A "Mixture of Experts" model is a large language model that has learned to be lazy in a very deliberate way. It keeps an enormous amount of knowledge on hand, but for every single word it processes it wakes up only a tiny slice of itself. This one trick is why a model can be huge and fast at the same time — and it is behind most of the frontier models you have used this year.',
+      sections: [
+        {
+          heading: '1. The Problem: One Brain That Has To Do Everything',
+          body: 'Picture a normal ("dense") language model as a single, extraordinarily well-read person. They know Python, medieval history, tax law, Tamil poetry, and how to write a polite refusal email.\n\nThe catch is how they think. Every time they read one word — just one — they mentally leaf through everything they know before responding. Reading the word "the" costs exactly as much effort as reading a subtle line of code.\n\nThat is literally what happens inside a dense model. Every parameter is multiplied by every token. Doubling the model\'s knowledge doubles the cost of every word, forever. Bigger models are smarter, and bigger models are slower and pricier, and for a long time there was no way to have one without the other.',
+          visual: 'moe-dense-vs-sparse',
+          keyTakeaway: 'In a dense model, knowledge and cost are welded together. Want more knowledge? You pay for it on every single token.',
+        },
+        {
+          heading: '2. The Big Idea: A Reception Desk and a Corridor of Specialists',
+          body: 'Now picture a hospital instead of one over-worked doctor.\n\nYou walk in with a broken wrist. Nobody makes the cardiologist, the dermatologist and the psychiatrist all examine you and then average their opinions. A receptionist glances at your case, sends you down the corridor to orthopaedics, and the other forty specialists carry on with their day. The hospital still contains all that expertise. Your visit just does not pay for it.\n\nThat is a Mixture of Experts. Inside each layer of the model, instead of one big block of computation that every token passes through, there are many parallel blocks — the "experts" — plus a small piece of the network whose only job is to decide who sees this token. That decider is called the router, or gating network.\n\nOne important detail people usually get wrong: the experts do not replace the whole model. In a transformer, attention (the part where words look at each other) stays dense and shared — every token still goes through it. It is the feed-forward block, the part that does the heavy per-token "thinking", that gets split into experts. So a "128-expert model" is really a stack of layers where each layer has 128 alternative feed-forward blocks and picks a couple.',
+          keyTakeaway: 'MoE swaps one big thinking block per layer for many small ones, plus a router that decides which ones get to run.',
+        },
+        {
+          heading: '3. Meet the Router: How the Model Decides Who Answers',
+          body: 'The router is almost insultingly simple. It is a small matrix that takes the token\'s vector and produces one score per expert. Those scores go through a softmax so they become something like probabilities: 0.62 for Expert 1, 0.23 for Expert 2, and so on.\n\nThen the model keeps the top few and throws the rest away. The chosen experts each produce an answer, and those answers are blended together, weighted by how confident the router was. The skipped experts cost nothing — not "a little", but genuinely nothing. Their weights sit in memory untouched.\n\nWatch it happen one step at a time:',
+          visual: 'moe-router',
+        },
+        {
+          heading: '4. Top-K Routing: Why Only 2 Out of 128?',
+          body: 'The number of experts allowed to answer is called K, as in "top-K routing". It is the single dial that controls how lazy the model is allowed to be.\n\n- K = 1 is the most extreme. Google\'s Switch Transformer did this, which is how they reached 1.6 trillion parameters back in 2021 without a proportional compute bill.\n- K = 2 became the popular sweet spot. Mixtral 8x7B picks 2 of its 8 experts per layer.\n- K = 8 out of 256 is where models like DeepSeek-V3 landed — many more, much smaller experts, so the routing decision gets finer-grained.\n\nWhy not K = 1 everywhere, since it is cheapest? Because with a single expert the routing decision is brutally all-or-nothing, gradients get noisy, and training becomes unstable. Picking two gives the model a blend to fall back on and something smoother to learn from.\n\nDrag the dial below and watch what fraction of the model you are actually paying for:',
+          visual: 'moe-topk',
+          codeSnippet: {
+            language: 'python',
+            code: `import torch
+import torch.nn.functional as F
+
+def moe_layer(x, router, experts, k=2):
+    # x: one token's vector, shape (d_model,)
+
+    # 1. Score every expert — this is the whole router
+    logits = router(x)                       # (num_experts,)
+    probs  = F.softmax(logits, dim=-1)
+
+    # 2. Keep only the k best
+    weights, idx = torch.topk(probs, k)      # (k,), (k,)
+    weights = weights / weights.sum()         # renormalise to sum to 1
+
+    # 3. Run ONLY those k experts. The rest never execute.
+    out = torch.zeros_like(x)
+    for w, i in zip(weights, idx):
+        out += w * experts[i](x)
+
+    return out`,
+          },
+          keyTakeaway: 'K is the sparsity dial. 2 of 128 experts means you store 128 blocks of knowledge but pay for roughly 1.6% of them per token.',
+        },
+        {
+          heading: '5. What Do the Experts Actually Specialise In?',
+          body: 'Here is where almost everyone\'s intuition goes wrong. It is tempting to imagine Expert 3 is "the biology expert" and Expert 7 is "the French expert", like consultants with brass name plates on their doors.\n\nThat is not what researchers find. Nobody assigns experts a subject. They are identical empty blocks at the start of training, and the specialisation that emerges is statistical, not human. Experts drift toward low-level patterns: one gravitates to punctuation and sentence structure, another to digits, another to code-ish token shapes, another to word fragments from non-English scripts. Useful, but not a topic you could put on a business card.\n\nThe second surprise: routing is decided per token, not per prompt or per sentence. A single sentence can be sprayed across a dozen different experts, and the same word can be routed differently depending on what surrounds it — because by the time the router sees the token, attention has already mixed the context into its vector.\n\nThe classic demonstration is a word with two meanings:',
+          visual: 'moe-context-routing',
+          keyTakeaway: 'Experts are not subject-matter departments. They are statistical neighbourhoods that emerged on their own, and routing is decided fresh for every token.',
+        },
+        {
+          heading: '6. The Traffic Jam Problem: Load Balancing',
+          body: 'MoE has an unglamorous failure mode that dominates the engineering effort: the model plays favourites.\n\nEarly in training, one expert gets slightly better by luck. The router notices and sends it more tokens. More tokens means more training signal, which makes it better still, which earns it even more tokens. Meanwhile the neglected experts get almost no data, never improve, and quietly become dead weight — parameters you paid for in memory that contribute nothing. Researchers call this routing collapse.\n\nIt gets worse in practice, because on real hardware each expert lives on a particular GPU and is given a fixed capacity — a maximum number of tokens it will accept per batch. Overflow tokens get dropped, meaning they skip the expert layer entirely and pass through unchanged. So a popular expert does not just hog resources; it actively costs you quality on the tokens it turned away.\n\nThe standard fix is an auxiliary load-balancing loss: a small extra penalty during training that nudges the router toward spreading traffic evenly. Newer models like DeepSeek-V3 go further and adjust a per-expert bias term instead, balancing load without an extra loss term fighting the main objective.\n\nToggle between the two worlds:',
+          visual: 'moe-load-balance',
+          codeSnippet: {
+            language: 'python',
+            code: `def load_balancing_loss(probs, expert_idx, num_experts):
+    """Penalise routers that funnel everything into one expert."""
+    # f: fraction of tokens actually sent to each expert
+    f = torch.bincount(expert_idx, minlength=num_experts).float()
+    f = f / expert_idx.numel()
+
+    # P: average routing probability given to each expert
+    P = probs.mean(dim=0)
+
+    # Minimised when both are flat (1/num_experts each)
+    return num_experts * torch.sum(f * P)`,
+          },
+          keyTakeaway: 'Left alone, routers collapse onto a few favourite experts. Keeping traffic spread out is the hardest part of training an MoE.',
+        },
+        {
+          heading: '7. The Real Trade-off: Cheap Compute, Expensive Memory',
+          body: 'MoE is often sold as "a cheaper model". That is only half true, and the missing half matters if you ever plan to run one.\n\nYou still have to load every expert into memory. All of them. The router cannot know in advance which experts the next token will want, so every expert must be sitting there ready. Mixtral 8x7B holds roughly 46.7 billion parameters, and you need GPU memory for all 46.7 billion — but each token only touches about 12.9 billion of them.\n\nSo the honest summary is: MoE trades memory for speed. You buy the answers of a big model at the running cost of a small one, and you pay for it in VRAM.\n\nThere are two more costs worth knowing. Experts are usually spread across GPUs, so every layer involves shuffling tokens between devices over the network — an all-to-all communication step that can eat the savings if your interconnect is slow. And with small batches you can end up loading an expert\'s weights to serve just a handful of tokens, which is a poor use of memory bandwidth. MoE shines at scale; it is often a bad deal on a single consumer GPU.',
+          visual: 'moe-memory-compute',
+          keyTakeaway: 'MoE does not make the model smaller. It makes each token cheaper. Memory stays big — that is the bill you are trading into.',
+        },
+        {
+          heading: '8. Where You Have Already Met MoE',
+          body: 'The idea is not new. Sparsely-gated MoE for neural networks was published by Shazeer and colleagues in 2017, and the underlying "mixture of experts" concept dates back to the early 1990s. What changed is that models got large enough for the trade to be worth making.\n\n- Switch Transformer (Google, 2021) — top-1 routing, up to 1.6T parameters. The proof that extreme sparsity trains at all.\n- Mixtral 8x7B (Mistral, 2023) — 8 experts, top-2, ~46.7B stored and ~12.9B active. The release that made open-weight MoE mainstream.\n- DeepSeek-V3 — 671B total parameters, ~37B active, with 256 fine-grained routed experts plus a shared expert that every token always uses, so common knowledge is not duplicated 256 times.\n- Qwen and several other open-weight families now ship MoE variants alongside dense ones.\n- GPT-4 is widely reported to be an MoE, though this has never been officially confirmed.\n\nWhen you next read that a model has "600B parameters but only 30B active", you now know exactly what that sentence is describing: a corridor of specialists, a receptionist deciding who sees you, and forty other doors that stayed shut.',
+        },
+      ],
+      summary: 'A Mixture of Experts replaces one big feed-forward block per layer with many small ones and a router that picks a handful per token. The result is a model that stores far more knowledge than it spends on any single word. The costs are real but different from what people expect: memory stays large, routing must be kept balanced or it collapses, and the specialists that emerge are statistical patterns rather than subject-matter departments.',
     },
   },
   {

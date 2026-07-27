@@ -3,6 +3,7 @@ import { ARTICLES } from '@/lib/data/articles';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ArticleCard from '@/components/ArticleCard';
+import ArticleVisual from '@/components/ArticleVisual';
 import { ArrowLeft, Clock } from 'lucide-react';
 
 interface ArticlePageProps {
@@ -77,6 +78,8 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
           <div key={idx} className="space-y-3 pt-2">
             <h2 className="text-xl font-bold text-slate-900">{sec.heading}</h2>
             <p className="whitespace-pre-line text-slate-700">{sec.body}</p>
+
+            {sec.visual && <ArticleVisual id={sec.visual} />}
 
             {sec.codeSnippet && (
               <div className="bg-slate-900 text-slate-100 rounded-xl overflow-hidden my-4 border border-slate-800">
