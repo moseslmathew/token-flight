@@ -1,116 +1,195 @@
 @import "tailwindcss";
 
+/* ============================================================
+   TokenFlight — warm editorial design system
+   Paper & ink palette, fluid type scale, reading measures.
+   ============================================================ */
+
+@theme {
+  /* ── Surfaces ─────────────────────────────────────────── */
+  --color-paper: #faf8f4;
+  --color-paper-deep: #f1ece2;
+  --color-surface: #ffffff;
+
+  /* ── Ink ──────────────────────────────────────────────── */
+  /* Muted/faint are tuned to clear 4.5:1 on --color-paper at small sizes */
+  --color-ink-strong: #15130f;
+  --color-ink: #2a2620;
+  --color-ink-muted: #635b4d;
+  --color-ink-faint: #7a7263;
+
+  /* ── Rules & edges ────────────────────────────────────── */
+  --color-rule: #e6ded1;
+  --color-rule-soft: #f0eae0;
+
+  /* ── Accents ──────────────────────────────────────────── */
+  --color-accent: #4c449b;
+  --color-accent-deep: #37307a;
+  --color-accent-soft: #eeecf8;
+  --color-ember: #b0532e;
+  --color-ember-soft: #f9efe9;
+  --color-sage: #3f7a5c;
+  --color-sage-soft: #eaf3ee;
+
+  /* ── Code ─────────────────────────────────────────────── */
+  --color-code-bg: #1f1c18;
+  --color-code-surface: #2a2621;
+  --color-code-ink: #e9e3d8;
+  --color-code-faint: #9a9184;
+
+  /* ── Type families ────────────────────────────────────── */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-serif: var(--font-newsreader), "Iowan Old Style", Georgia, serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* ── Fluid type scale ─────────────────────────────────── */
+  --text-micro: 0.6875rem;
+  --text-micro--line-height: 1.4;
+  --text-micro--letter-spacing: 0.14em;
+
+  --text-meta: clamp(0.8125rem, 0.8rem + 0.08vw, 0.875rem);
+  --text-meta--line-height: 1.5;
+
+  --text-body: clamp(1.0625rem, 1.02rem + 0.22vw, 1.1875rem);
+  --text-body--line-height: 1.75;
+
+  --text-lede: clamp(1.1875rem, 1.11rem + 0.36vw, 1.375rem);
+  --text-lede--line-height: 1.6;
+
+  --text-h3: clamp(1.0625rem, 1.01rem + 0.28vw, 1.25rem);
+  --text-h3--line-height: 1.35;
+
+  --text-h2: clamp(1.375rem, 1.24rem + 0.62vw, 1.75rem);
+  --text-h2--line-height: 1.25;
+  --text-h2--letter-spacing: -0.011em;
+
+  --text-h1: clamp(1.875rem, 1.5rem + 1.6vw, 2.875rem);
+  --text-h1--line-height: 1.1;
+  --text-h1--letter-spacing: -0.021em;
+
+  --text-display: clamp(1.9375rem, 1.5rem + 2.2vw, 3.25rem);
+  --text-display--line-height: 1.06;
+  --text-display--letter-spacing: -0.025em;
+}
+
 @layer base {
   :root {
-    --background: #f8fafc;
-    --foreground: #0f172a;
+    /* Reading measures — the text column stays narrow, figures breathe wider */
+    --measure: 41rem;
+    --measure-wide: 52rem;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    /* Keep anchored headings clear of the sticky masthead */
+    scroll-padding-top: 6rem;
   }
 
   body {
-    background-color: var(--background);
-    color: var(--foreground);
-    font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
   }
-}
 
-/* Modern Gradient Texts for Light Theme */
-.gradient-text-indigo {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 50%, #2563eb 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.gradient-text-blue {
-  background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #0284c7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-.gradient-text-emerald {
-  background: linear-gradient(135deg, #059669 0%, #10b981 50%, #0284c7 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Glassmorphic Light Cards */
-.modern-glass-card {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(226, 232, 240, 0.9);
-  border-radius: 1.25rem;
-  box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.02);
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.modern-glass-card:hover {
-  border-color: rgba(99, 102, 241, 0.3);
-  box-shadow: 0 20px 40px -15px rgba(79, 70, 229, 0.12);
-  transform: translateY(-2px);
-}
-
-.modern-glass-nav {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-}
-
-/* Pulsing Status Dot */
-.pulse-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: #10b981;
-  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
-  animation: pulse-ring 2s infinite;
-}
-
-@keyframes pulse-ring {
-  0% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  /* Serif copy gets optical sizing and old-style figures where available */
+  .font-serif {
+    font-optical-sizing: auto;
   }
-  70% {
-    transform: scale(1);
-    box-shadow: 0 0 0 8px rgba(16, 185, 129, 0);
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
   }
-  100% {
-    transform: scale(0.95);
-    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background-color: var(--color-accent-soft);
+    color: var(--color-accent-deep);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
-/* Continuous Flight Glide Animation across Footer */
-@keyframes flight-glide {
-  0% {
-    transform: translateX(-120px) translateY(4px) rotate(-8deg);
-    opacity: 0;
+@layer components {
+  /* ── Reading measures ───────────────────────────────── */
+  .measure {
+    max-width: var(--measure);
+    margin-inline: auto;
   }
-  8% {
-    opacity: 0.9;
+
+  .measure-wide {
+    max-width: var(--measure-wide);
+    margin-inline: auto;
   }
-  50% {
-    transform: translateX(50vw) translateY(-10px) rotate(3deg);
-    opacity: 1;
+
+  /* ── Editorial eyebrow label ────────────────────────── */
+  .eyebrow {
+    font-family: var(--font-sans);
+    font-size: var(--text-micro);
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
   }
-  92% {
-    opacity: 0.9;
+
+  /* ── Quiet surface card ─────────────────────────────── */
+  .paper-card {
+    background-color: var(--color-surface);
+    border: 1px solid var(--color-rule);
+    border-radius: 1rem;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
   }
-  100% {
-    transform: translateX(calc(100vw + 60px)) translateY(-2px) rotate(-6deg);
-    opacity: 0;
+
+  .paper-card:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-rule));
+    box-shadow: 0 12px 32px -20px rgba(38, 30, 16, 0.35);
+  }
+
+  /* ── Horizontal filter rail: fades at the scroll edge ─ */
+  .filter-rail {
+    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent 100%);
+    mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent 100%);
+  }
+
+  @media (min-width: 1024px) {
+    .filter-rail {
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+  }
+
+  /* ── Underline that grows on hover / active nav ─────── */
+  .link-underline {
+    background-image: linear-gradient(var(--color-accent), var(--color-accent));
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1.5px;
+    transition: background-size 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .link-underline:hover,
+  .link-underline[data-active="true"] {
+    background-size: 100% 1.5px;
   }
 }
 
-.animate-flight-glide {
-  animation: flight-glide 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
-  will-change: transform, opacity;
-}
-
-/* Hide scrollbar for clean touch carousel on mobile */
+/* ── Hide scrollbar for touch filter rails ───────────────── */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -119,26 +198,43 @@
   scrollbar-width: none;
 }
 
-/* Custom Scrollbar */
+/* ── Page scrollbar ──────────────────────────────────────── */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
 }
 ::-webkit-scrollbar-track {
-  background: #f8fafc;
+  background: var(--color-paper);
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
-  border-radius: 3px;
+  background: #dcd3c4;
+  border-radius: 999px;
+  border: 3px solid var(--color-paper);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #c8bda9;
 }
 
-/* Share Menu Pop-In Animation */
+/* ── Entrance: gentle rise ───────────────────────────────── */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-rise-in {
+  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* ── Share menu pop-in ───────────────────────────────────── */
 @keyframes share-menu-in {
   0% {
     opacity: 0;
-    transform: translateY(4px) scale(0.95);
+    transform: translateY(4px) scale(0.96);
   }
   100% {
     opacity: 1;
@@ -147,10 +243,24 @@
 }
 
 .animate-share-menu-in {
-  animation: share-menu-in 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: share-menu-in 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Article Visuals: flowing dashed connector between stages */
+/* ── Mobile bottom sheet ─────────────────────────────────── */
+@keyframes slide-up {
+  0% {
+    transform: translateY(100%);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slide-up 0.26s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ── Article visuals: flowing dashed connector ───────────── */
 @keyframes moe-flow-dash {
   to {
     stroke-dashoffset: -24;
@@ -162,7 +272,7 @@
   animation: moe-flow-dash 0.7s linear infinite;
 }
 
-/* Article Visuals: token pop-in */
+/* ── Article visuals: token pop-in ───────────────────────── */
 @keyframes moe-pop {
   0% {
     opacity: 0;
@@ -183,21 +293,10 @@
 
 @media (prefers-reduced-motion: reduce) {
   .moe-flow,
-  .moe-pop {
+  .moe-pop,
+  .animate-rise-in,
+  .animate-slide-up,
+  .animate-share-menu-in {
     animation: none;
   }
-}
-
-/* Mobile Bottom Sheet Slide-Up Animation */
-@keyframes slide-up {
-  0% {
-    transform: translateY(100%);
-  }
-  100% {
-    transform: translateY(0);
-  }
-}
-
-.animate-slide-up {
-  animation: slide-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

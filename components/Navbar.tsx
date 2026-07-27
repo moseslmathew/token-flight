@@ -1,54 +1,66 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { BookOpen, Newspaper, Send } from 'lucide-react';
+
+const NAV_LINKS = [
+  { href: '/', label: 'Latest AI News', match: (p: string) => p === '/' },
+  {
+    href: '/learn',
+    label: 'Learn',
+    match: (p: string) => p.startsWith('/learn') || p.startsWith('/blog'),
+  },
+];
 
 export default function Navbar() {
   const pathname = usePathname();
+  const [scrolled, setScrolled] = useState(false);
 
-  const isNewsActive = pathname === '/';
-  const isLearnActive = pathname.startsWith('/learn') || pathname.startsWith('/blog');
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 8);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 modern-glass-nav">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
-        {/* Brand Logo */}
-        <Link href="/" className="flex items-center gap-2.5 group shrink-0">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-purple-500 flex items-center justify-center text-white shadow-md shadow-indigo-500/20 group-hover:scale-105 transition-transform duration-200">
-            <Send className="w-4 h-4 transform -rotate-12 translate-x-[-1px] translate-y-[1px]" />
-          </div>
-          <span className="font-black text-lg sm:text-xl tracking-tight text-slate-900">
-            Token<span className="text-indigo-600">Flight</span>
+    <header
+      className={`sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
+        scrolled
+          ? 'bg-paper/85 backdrop-blur-md border-b border-rule'
+          : 'bg-paper border-b border-transparent'
+      }`}
+    >
+      <div className="measure-wide flex h-[4.5rem] items-center justify-between gap-6 px-4 sm:px-6">
+        {/* Wordmark */}
+        <Link href="/" className="group flex items-baseline gap-px shrink-0">
+          <span className="font-serif text-[1.375rem] font-semibold tracking-tight text-ink-strong">
+            Token
+          </span>
+          <span className="font-serif text-[1.375rem] font-semibold italic tracking-tight text-accent transition-colors duration-200 group-hover:text-ember">
+            Flight
           </span>
         </Link>
 
-        {/* Primary Navigation Links */}
-        <nav className="flex items-center gap-1.5 sm:gap-2 shrink-0">
-          <Link
-            href="/"
-            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 whitespace-nowrap shrink-0 ${
-              isNewsActive
-                ? 'bg-indigo-50 text-indigo-700 border border-indigo-200/80 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
-            }`}
-          >
-            <Newspaper className="w-4 h-4 text-indigo-600" />
-            <span>Latest AI News</span>
-          </Link>
-
-          <Link
-            href="/learn"
-            className={`px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center gap-2 whitespace-nowrap shrink-0 ${
-              isLearnActive
-                ? 'bg-indigo-50 text-indigo-700 border border-indigo-200/80 shadow-2xs'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100/70'
-            }`}
-          >
-            <BookOpen className="w-4 h-4 text-indigo-600" />
-            <span>Learn</span>
-          </Link>
+        {/* Primary navigation */}
+        <nav className="flex items-center gap-5 sm:gap-7 shrink-0">
+          {NAV_LINKS.map((link) => {
+            const active = link.match(pathname);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                data-active={active}
+                aria-current={active ? 'page' : undefined}
+                className={`link-underline pb-0.5 text-[0.9375rem] font-medium whitespace-nowrap transition-colors duration-200 ${
+                  active ? 'text-ink-strong' : 'text-ink-muted hover:text-ink-strong'
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
         </nav>
       </div>
     </header>

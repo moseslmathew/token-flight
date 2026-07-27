@@ -1,19 +1,36 @@
-'use client';
-
 import React from 'react';
+import Link from 'next/link';
 
 export default function Footer() {
   return (
-    <footer className="bg-white border-t border-slate-200/80 text-slate-500 text-xs mt-auto py-7">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
-        <div className="flex flex-col sm:flex-row items-center gap-1.5 sm:gap-2">
-          <span className="font-semibold text-slate-800">© {new Date().getFullYear()} TokenFlight.</span>
-          <span className="hidden sm:inline text-slate-300">•</span>
-          <span className="text-slate-500">First-Principles AI & Token Engineering</span>
+    <footer className="mt-24 border-t border-rule">
+      <div className="measure-wide flex flex-col gap-6 px-4 py-10 sm:flex-row sm:items-end sm:justify-between sm:px-6">
+        <div className="space-y-2">
+          <Link href="/" className="flex items-baseline gap-px">
+            <span className="font-serif text-lg font-semibold tracking-tight text-ink-strong">
+              Token
+            </span>
+            <span className="font-serif text-lg font-semibold italic tracking-tight text-accent">
+              Flight
+            </span>
+          </Link>
+          <p className="max-w-sm text-meta text-ink-muted">
+            First-principles notes on language models — written to be understood, not skimmed.
+          </p>
         </div>
 
-        <div className="text-[10px] font-extrabold tracking-[0.14em] text-slate-400 uppercase">
-          From Tokens to Intelligence
+        <div className="flex flex-col gap-2 sm:items-end">
+          <nav className="flex items-center gap-5 text-meta text-ink-muted">
+            <Link href="/" className="transition-colors hover:text-ink-strong">
+              Latest AI News
+            </Link>
+            <Link href="/learn" className="transition-colors hover:text-ink-strong">
+              Learn
+            </Link>
+          </nav>
+          <p className="text-meta text-ink-faint">
+            © {new Date().getFullYear()} TokenFlight
+          </p>
         </div>
       </div>
     </footer>

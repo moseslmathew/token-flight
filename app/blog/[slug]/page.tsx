@@ -4,7 +4,8 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import ArticleCard from '@/components/ArticleCard';
 import ArticleVisual from '@/components/ArticleVisual';
-import { ArrowLeft, Clock } from 'lucide-react';
+import ReadingProgress from '@/components/ReadingProgress';
+import { ArrowLeft } from 'lucide-react';
 
 interface ArticlePageProps {
   params: Promise<{
@@ -29,96 +30,101 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
   const relatedArticles = ARTICLES.filter((a) => a.id !== article.id).slice(0, 2);
 
   return (
-    <div className="max-w-3xl mx-auto px-4 sm:px-6 py-12 space-y-8">
-      {/* Top Back Link */}
-      <Link
-        href="/learn"
-        className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600 transition-colors"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back to Learn
-      </Link>
+    <>
+      <ReadingProgress />
 
-      {/* Article Header */}
-      <header className="space-y-4 border-b border-slate-200 pb-8">
-        <div className="flex items-center gap-3 text-xs text-slate-500">
-          <span className="font-semibold px-2.5 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200">
-            {article.category}
-          </span>
-          <span className="flex items-center gap-1">
-            <Clock className="w-3.5 h-3.5" />
-            {article.readTime}
-          </span>
-          <span>•</span>
-          <span>{article.publishedAt}</span>
+      <article className="measure-wide px-4 pt-10 sm:px-6 sm:pt-14">
+        {/* Back */}
+        <div className="measure">
+          <Link
+            href="/learn"
+            className="inline-flex items-center gap-2 text-meta font-medium text-ink-muted transition-colors hover:text-accent"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" />
+            Back to Learn
+          </Link>
         </div>
 
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight leading-tight">
-          {article.title}
-        </h1>
+        {/* Title block */}
+        <header className="measure animate-rise-in mt-10 space-y-5">
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+            <span className="eyebrow text-ember">{article.category}</span>
+            <span className="text-ink-faint">·</span>
+            <span className="eyebrow text-ink-faint">{article.difficulty}</span>
+          </div>
 
-        <p className="text-slate-600 text-base leading-relaxed">
-          {article.excerpt}
-        </p>
+          <h1 className="font-serif text-h1 font-semibold text-ink-strong">{article.title}</h1>
 
-        <div className="text-xs text-slate-500 pt-2 font-medium">
-          Written by {article.author.name}
+          <p className="font-serif text-lede text-ink-muted">{article.excerpt}</p>
+
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-rule pt-5 text-meta text-ink-faint">
+            <span className="text-ink-muted">{article.author.name}</span>
+            <span>·</span>
+            <span>{article.publishedAt}</span>
+            <span>·</span>
+            <span>{article.readTime}</span>
+          </div>
+        </header>
+
+        {/* Lead */}
+        <div className="measure mt-12">
+          <p className="font-serif text-lede text-ink-strong">{article.content.intro}</p>
         </div>
-      </header>
 
-
-
-      {/* Article Body */}
-      <div className="space-y-8 text-slate-800 text-sm sm:text-base leading-relaxed">
-        <p className="text-slate-700 bg-slate-100/80 p-5 rounded-xl border border-slate-200">
-          {article.content.intro}
-        </p>
-
+        {/* Sections */}
         {article.content.sections.map((sec, idx) => (
-          <div key={idx} className="space-y-3 pt-2">
-            <h2 className="text-xl font-bold text-slate-900">{sec.heading}</h2>
-            <p className="whitespace-pre-line text-slate-700">{sec.body}</p>
+          <section key={idx} className="mt-16">
+            <div className="measure space-y-5">
+              <h2 className="font-serif text-h2 font-semibold text-ink-strong">{sec.heading}</h2>
+              <p className="whitespace-pre-line font-serif text-body text-ink">{sec.body}</p>
+            </div>
 
-            {sec.visual && <ArticleVisual id={sec.visual} />}
+            {sec.visual && (
+              <div className="measure-wide mt-10">
+                <ArticleVisual id={sec.visual} />
+              </div>
+            )}
 
             {sec.codeSnippet && (
-              <div className="bg-slate-900 text-slate-100 rounded-xl overflow-hidden my-4 border border-slate-800">
-                <div className="px-4 py-2 bg-slate-800 text-slate-400 text-xs font-mono">
-                  {sec.codeSnippet.language}
-                </div>
-                <pre className="p-4 text-xs font-mono text-indigo-300 overflow-x-auto">
+              <figure className="measure-wide mt-10 overflow-hidden rounded-xl bg-code-bg">
+                <figcaption className="flex items-center justify-between border-b border-white/8 px-5 py-2.5">
+                  <span className="eyebrow text-code-faint">{sec.codeSnippet.language}</span>
+                </figcaption>
+                <pre className="overflow-x-auto px-5 py-5 font-mono text-[0.8125rem] leading-[1.75] text-code-ink">
                   <code>{sec.codeSnippet.code}</code>
                 </pre>
-              </div>
+              </figure>
             )}
 
             {sec.keyTakeaway && (
-              <div className="p-4 bg-indigo-50 border border-indigo-200 rounded-xl text-xs text-indigo-900">
-                <strong className="block mb-1 text-indigo-700">Key Takeaway:</strong>
-                {sec.keyTakeaway}
-              </div>
+              <aside className="measure mt-10 border-l-2 border-ember pl-5 sm:pl-6">
+                <span className="eyebrow block text-ember">Key takeaway</span>
+                <p className="mt-2 font-serif text-[1.0625rem] leading-relaxed text-ink">
+                  {sec.keyTakeaway}
+                </p>
+              </aside>
             )}
-          </div>
+          </section>
         ))}
 
-        {/* Summary Box */}
-        <div className="p-5 bg-slate-100 border border-slate-200 rounded-xl space-y-2 mt-8">
-          <h3 className="text-base font-bold text-slate-900">Summary</h3>
-          <p className="text-slate-700 text-xs sm:text-sm">{article.content.summary}</p>
+        {/* Closing summary */}
+        <div className="measure mt-20 border-t border-rule pt-10">
+          <span className="eyebrow block text-ink-faint">In summary</span>
+          <p className="mt-3 font-serif text-lede text-ink-strong">{article.content.summary}</p>
         </div>
-      </div>
+      </article>
 
-      {/* Related Articles */}
+      {/* Related reading */}
       {relatedArticles.length > 0 && (
-        <section className="pt-10 border-t border-slate-200 space-y-4">
-          <h3 className="text-lg font-bold text-slate-900">Related Articles</h3>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <section className="measure-wide mt-24 px-4 sm:px-6">
+          <h2 className="eyebrow border-t border-rule pt-10 text-ink-faint">Keep reading</h2>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
             {relatedArticles.map((rel) => (
-              <ArticleCard key={rel.id} article={rel} />
+              <ArticleCard key={rel.id} article={rel} variant="compact" />
             ))}
           </div>
         </section>
       )}
-    </div>
+    </>
   );
 }

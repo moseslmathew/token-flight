@@ -1,10 +1,27 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Newsreader, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
+});
+
+const newsreader = Newsreader({
+  subsets: ['latin'],
+  variable: '--font-newsreader',
+  display: 'swap',
+  style: ['normal', 'italic'],
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-jetbrains',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: 'TokenFlight — AI & Token Engineering Notes',
@@ -23,10 +40,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${inter.className} bg-slate-50/50 text-slate-900 min-h-screen flex flex-col antialiased`}>
+    <html
+      lang="en"
+      className={`${inter.variable} ${newsreader.variable} ${jetbrainsMono.variable}`}
+    >
+      <body className="bg-paper text-ink min-h-screen flex flex-col antialiased">
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:rounded-lg focus:bg-ink-strong focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-paper"
+        >
+          Skip to content
+        </a>
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <main id="main" className="flex-1">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
