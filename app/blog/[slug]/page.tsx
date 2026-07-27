@@ -61,8 +61,6 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
             <span className="text-ink-muted">{article.author.name}</span>
             <span>·</span>
             <span>{article.publishedAt}</span>
-            <span>·</span>
-            <span>{article.readTime}</span>
           </div>
         </header>
 

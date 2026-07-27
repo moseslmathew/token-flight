@@ -4,7 +4,7 @@ export interface AINewsItem {
   title: string;
   excerpt: string;
   category: 'Model Releases' | 'Research & Architecture' | 'Open Source' | 'Hardware & Compute' | 'Industry & Policy';
-  readTime: string;
+  readTime?: string;
   publishedAt: string;
   source: string;
   sourceUrl: string;

@@ -39,8 +39,7 @@ export default function ArticleCard({ article, variant = 'row' }: ArticleCardPro
         {/* Meta rail */}
         <div className="flex flex-row items-center gap-3 sm:flex-col sm:items-start sm:gap-1.5 sm:pt-1.5">
           <span className="eyebrow text-accent">{article.category}</span>
-          <span className="text-meta text-ink-faint">{article.readTime}</span>
-          <span className="hidden text-meta text-ink-faint sm:block">{article.publishedAt}</span>
+          <span className="text-meta text-ink-faint">{article.publishedAt}</span>
         </div>
 
         {/* Body */}

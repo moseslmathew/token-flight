@@ -5,7 +5,7 @@ export interface Article {
   excerpt: string;
   category: 'LLMs' | 'Machine Learning';
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  readTime: string;
+  readTime?: string;
   publishedAt: string;
   author: {
     name: string;
