@@ -248,10 +248,9 @@ export default function LatestAINewsPage() {
     : filteredNews;
 
   return (
-    <div className="measure-wide px-4 pb-8 pt-14 sm:px-6 sm:pt-20">
+    <div className="measure-wide px-4 pb-8 pt-6 sm:px-6 sm:pt-10">
       {/* Masthead */}
-      <header className="animate-rise-in space-y-5">
-        <span className="eyebrow block text-accent">The Dispatch</span>
+      <header className="animate-rise-in space-y-3">
         <h1 className="text-h1 font-semibold text-ink-strong">Latest AI news</h1>
         <p className="text-lede text-ink-muted">
           Frontier model releases, research and infrastructure — each one read closely and reduced
