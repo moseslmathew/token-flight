@@ -287,10 +287,6 @@ export default function LatestAINewsPage() {
             );
           })}
         </div>
-
-        <span className="hidden shrink-0 text-meta text-ink-faint lg:block">
-          {filteredNews.length} reports
-        </span>
       </div>
 
       {/* Featured report */}

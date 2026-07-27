@@ -54,10 +54,6 @@ export default function LearnPage() {
             );
           })}
         </div>
-
-        <span className="hidden shrink-0 text-meta text-ink-faint sm:block">
-          {filteredArticles.length} guides
-        </span>
       </div>
 
       {/* Index listing */}
