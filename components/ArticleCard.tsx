@@ -48,7 +48,7 @@ export default function ArticleCard({ article, variant = 'row' }: ArticleCardPro
           <h3 className="text-h2 font-semibold text-ink-strong transition-colors duration-200 group-hover:text-accent">
             {article.title}
           </h3>
-          <p className="max-w-[46rem] text-[1.0625rem] leading-relaxed text-ink-muted">
+          <p className="max-w-3xl text-[1.0625rem] leading-relaxed text-ink-muted">
             {article.excerpt}
           </p>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pt-1">

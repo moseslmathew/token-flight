@@ -14,7 +14,7 @@ export default function LearnPage() {
   return (
     <div className="measure-wide px-4 pb-8 pt-14 sm:px-6 sm:pt-20">
       {/* Masthead */}
-      <header className="animate-rise-in max-w-[44rem] space-y-5">
+      <header className="animate-rise-in max-w-4xl space-y-5">
         <span className="eyebrow block text-accent">Interactive Engineering Guides</span>
         <h1 className="text-h1 font-semibold text-ink-strong">
           Understanding artificial intelligence from first principles

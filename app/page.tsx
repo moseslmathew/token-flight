@@ -245,7 +245,7 @@ export default function LatestAINewsPage() {
   return (
     <div className="measure-wide px-4 pb-8 pt-14 sm:px-6 sm:pt-20">
       {/* Masthead */}
-      <header className="animate-rise-in max-w-[44rem] space-y-5">
+      <header className="animate-rise-in max-w-4xl space-y-5">
         <span className="eyebrow block text-accent">The Dispatch</span>
         <h1 className="text-h1 font-semibold text-ink-strong">Latest AI news</h1>
         <p className="text-lede text-ink-muted">
@@ -292,7 +292,7 @@ export default function LatestAINewsPage() {
       {/* Featured report */}
       {isAllSelected && featuredNews && (
         <article id={featuredNews.slug} className="scroll-mt-28 border-b border-rule py-14">
-          <div className="max-w-[46rem] space-y-5">
+          <div className="max-w-4xl space-y-5">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
               <span className="eyebrow text-accent">Featured report</span>
               <span className="text-ink-faint">·</span>
@@ -314,12 +314,12 @@ export default function LatestAINewsPage() {
             </div>
           </div>
 
-          <div className="mt-10 max-w-[46rem]">
+          <div className="mt-10 max-w-5xl">
             <Analysis item={featuredNews} />
           </div>
 
           {featuredNews.content.technicalHighlights && (
-            <div className="mt-10 max-w-[46rem] border-t border-rule-soft pt-7">
+            <div className="mt-10 max-w-5xl border-t border-rule-soft pt-7">
               <span className="eyebrow block text-ink-faint">Technical highlights</span>
               <ul className="mt-4 space-y-2.5">
                 {featuredNews.content.technicalHighlights.map((highlight, idx) => (
@@ -363,11 +363,11 @@ export default function LatestAINewsPage() {
               <span className="text-meta text-ink-faint">{item.readTime}</span>
             </div>
 
-            <h2 className="mt-4 max-w-[42rem] text-h2 font-semibold text-ink-strong">
+            <h2 className="mt-4 max-w-4xl text-h2 font-semibold text-ink-strong">
               {item.title}
             </h2>
 
-            <p className="mt-3 max-w-[42rem] text-[1.0625rem] leading-relaxed text-ink-muted">
+            <p className="mt-3 max-w-4xl text-[1.0625rem] leading-relaxed text-ink-muted">
               {item.excerpt}
             </p>
 
