@@ -77,7 +77,7 @@
 @layer base {
   :root {
     --measure: 44rem;
-    --measure-wide: 68rem;
+    --measure-wide: 52rem;
   }
 
   html {
