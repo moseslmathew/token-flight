@@ -26,35 +26,36 @@ export default function Navbar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-[background-color,border-color,backdrop-filter] duration-300 ${
+      className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-paper/85 backdrop-blur-md border-b border-rule'
-          : 'bg-paper border-b border-transparent'
+          ? 'bg-paper/90 backdrop-blur-md border-b border-rule shadow-xs'
+          : 'bg-paper/70 backdrop-blur-sm border-b border-rule/60'
       }`}
     >
-      <div className="measure-wide flex h-[4.5rem] items-center justify-between gap-6 px-4 sm:px-6">
+      <div className="measure-wide flex h-14 items-center justify-between gap-6 px-4 sm:px-6">
         {/* Wordmark */}
         <Link href="/" className="group flex items-baseline gap-px shrink-0">
-          <span className="text-[1.375rem] font-semibold tracking-tight text-ink-strong">
+          <span className="text-[1.25rem] font-bold tracking-tight text-ink-strong">
             Token
           </span>
-          <span className="text-[1.375rem] font-semibold tracking-tight text-accent transition-colors duration-200 group-hover:text-accent">
+          <span className="text-[1.25rem] font-bold tracking-tight text-accent transition-colors duration-200 group-hover:text-accent-deep">
             Flight
           </span>
         </Link>
 
         {/* Primary navigation */}
-        <nav className="flex items-center gap-5 sm:gap-7 shrink-0">
+        <nav className="flex items-center gap-1 sm:gap-2 rounded-full bg-card/80 p-1 border border-rule/80">
           {NAV_LINKS.map((link) => {
             const active = link.match(pathname);
             return (
               <Link
                 key={link.href}
                 href={link.href}
-                data-active={active}
                 aria-current={active ? 'page' : undefined}
-                className={`link-underline pb-0.5 text-[0.9375rem] font-medium whitespace-nowrap transition-colors duration-200 ${
-                  active ? 'text-ink-strong' : 'text-ink-muted hover:text-ink-strong'
+                className={`relative rounded-full px-4 py-1 text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                  active
+                    ? 'bg-paper text-ink-strong shadow-xs font-semibold'
+                    : 'text-ink-muted hover:text-ink-strong'
                 }`}
               >
                 {link.label}
