@@ -10,22 +10,20 @@ import {
   useTicker,
   useVisualVisible,
   clamp,
+  ACCENT,
+  ACCENT_DEEP,
+  COOL,
+  PLATE,
 } from './primitives';
 
 /* ────────────────────────────────────────────────────────────
-   Palette carried over from the source animation so the article
-   and the video read as the same piece of work.
+   Value colours: emerald for positive, blue for negative.
    ──────────────────────────────────────────────────────────── */
 
-const CORAL = '#d97757';
-const CORAL_DEEP = '#bc5b3b';
-const SLATE = '#6b89a7';
-const PLATE = '#2a2823';
-
-/** Positive values lean coral, negative lean slate; alpha tracks magnitude. */
+/** Positive values lean emerald, negative lean blue; alpha tracks magnitude. */
 const cellColor = (v: number, k = 0.62) => {
   const a = Math.min(1, Math.abs(v) / 1.2) * k;
-  return v >= 0 ? `rgba(217,119,87,${a.toFixed(3)})` : `rgba(107,137,167,${a.toFixed(3)})`;
+  return v >= 0 ? `rgba(4,120,87,${a.toFixed(3)})` : `rgba(37,99,235,${a.toFixed(3)})`;
 };
 
 const fmtNum = (v: number) => (v < 0 ? '−' : '') + Math.abs(v).toFixed(2);
@@ -91,9 +89,9 @@ function Pipeline() {
       <div
         className="flex min-h-[4.5rem] w-full items-center justify-center rounded-xl border px-3 py-3 text-center transition-all duration-500"
         style={{
-          borderColor: active ? CORAL : '#e6ded1',
-          backgroundColor: active ? 'rgba(217,119,87,0.07)' : '#fff',
-          boxShadow: active ? `0 0 0 5px rgba(217,119,87,0.10)` : 'none',
+          borderColor: active ? ACCENT : '#e3e7e5',
+          backgroundColor: active ? 'rgba(4,120,87,0.07)' : '#fff',
+          boxShadow: active ? `0 0 0 5px rgba(4,120,87,0.10)` : 'none',
         }}
       >
         {children}
@@ -112,11 +110,11 @@ function Pipeline() {
           y2="5"
           strokeWidth="2"
           strokeLinecap="round"
-          stroke={lit ? CORAL : '#e6ded1'}
+          stroke={lit ? ACCENT : '#e3e7e5'}
           className={lit ? 'moe-flow' : ''}
           style={{ transition: 'stroke 0.4s ease' }}
         />
-        <path d="M18 1.5 L24 5 L18 8.5 Z" fill={lit ? CORAL : '#e6ded1'} style={{ transition: 'fill 0.4s ease' }} />
+        <path d="M18 1.5 L24 5 L18 8.5 Z" fill={lit ? ACCENT : '#e3e7e5'} style={{ transition: 'fill 0.4s ease' }} />
       </svg>
     </div>
   );
@@ -129,7 +127,7 @@ function Pipeline() {
     >
       <div className="flex items-start">
         <Station active={phase === 0} label="your text">
-          <span className="font-serif text-[0.9375rem] font-semibold text-ink-strong sm:text-base">
+          <span className="text-[0.9375rem] font-semibold text-ink-strong sm:text-base">
             The cat sat quietly.
           </span>
         </Station>
@@ -152,11 +150,11 @@ function Pipeline() {
 
         <Station active={phase === 2 || phase === 3} label="the model">
           <span
-            className="flex w-full items-center justify-center rounded-lg px-2 py-3 font-serif text-lg font-semibold tracking-wide transition-all duration-500"
+            className="flex w-full items-center justify-center rounded-lg px-2 py-3 text-lg font-semibold tracking-wide transition-all duration-500"
             style={{
               backgroundColor: PLATE,
-              color: '#f6f1e4',
-              boxShadow: phase === 3 ? `0 0 0 5px rgba(217,119,87,0.18)` : 'none',
+              color: '#ffffff',
+              boxShadow: phase === 3 ? `0 0 0 5px rgba(4,120,87,0.18)` : 'none',
             }}
           >
             LLM
@@ -164,7 +162,7 @@ function Pipeline() {
         </Station>
       </div>
 
-      <p className="mt-5 text-center font-serif text-[0.9375rem] text-ink transition-opacity duration-300">
+      <p className="mt-5 text-center text-[0.9375rem] text-ink transition-opacity duration-300">
         {PIPELINE_CAPTIONS[phase]}
       </p>
     </VisualFrame>
@@ -239,7 +237,7 @@ function Tokenize() {
             }}
             aria-label={`Step ${i + 1}`}
             className="h-1.5 rounded-full transition-colors duration-200"
-            style={{ backgroundColor: i === step ? CORAL : i < step ? 'rgba(217,119,87,0.35)' : '#e6ded1' }}
+            style={{ backgroundColor: i === step ? ACCENT : i < step ? 'rgba(4,120,87,0.35)' : '#e3e7e5' }}
           />
         ))}
       </div>
@@ -247,16 +245,16 @@ function Tokenize() {
       {/* The raw sentence */}
       <div className="mt-6 flex min-h-[3rem] items-center justify-center">
         <span
-          className="rounded-xl border px-4 py-2.5 font-serif text-base font-semibold text-ink-strong transition-opacity duration-500 sm:text-lg"
+          className="rounded-xl border px-4 py-2.5 text-base font-semibold text-ink-strong transition-opacity duration-500 sm:text-lg"
           style={{
-            borderColor: '#e6ded1',
+            borderColor: '#e3e7e5',
             backgroundColor: '#fff',
             opacity: step === 0 ? 1 : 0.35,
           }}
         >
           {SENTENCE.slice(0, typed)}
           {step === 0 && typed < SENTENCE.length && (
-            <span className="ml-px inline-block h-[1.1em] w-[2px] translate-y-[0.15em] bg-ember align-middle" />
+            <span className="ml-px inline-block h-[1.1em] w-[2px] translate-y-[0.15em] bg-accent align-middle" />
           )}
         </span>
       </div>
@@ -279,11 +277,11 @@ function Tokenize() {
               }}
             >
               <span
-                className="rounded-lg border px-2.5 py-1.5 font-serif text-[0.9375rem] font-semibold sm:text-base"
+                className="rounded-lg border px-2.5 py-1.5 text-[0.9375rem] font-semibold sm:text-base"
                 style={{
-                  borderColor: isSplit ? CORAL : tk.hero ? CORAL : '#e6ded1',
-                  backgroundColor: tk.hero ? 'rgba(217,119,87,0.10)' : '#fff',
-                  color: '#22201b',
+                  borderColor: isSplit ? ACCENT : tk.hero ? ACCENT : '#e3e7e5',
+                  backgroundColor: tk.hero ? 'rgba(4,120,87,0.10)' : '#fff',
+                  color: '#1f2523',
                 }}
               >
                 {tk.text}
@@ -292,7 +290,7 @@ function Tokenize() {
                 className="font-mono text-[11px] tabular-nums transition-opacity duration-500"
                 style={{
                   opacity: step >= 3 && tk.id ? 1 : 0,
-                  color: tk.hero ? CORAL_DEEP : '#7a7263',
+                  color: tk.hero ? ACCENT_DEEP : '#6e7671',
                   fontWeight: tk.hero ? 600 : 400,
                 }}
               >
@@ -303,7 +301,7 @@ function Tokenize() {
         })}
       </div>
 
-      <p className="mt-5 min-h-[3rem] text-center font-serif text-[0.9375rem] text-ink">
+      <p className="mt-5 min-h-[3rem] text-center text-[0.9375rem] text-ink">
         {TOKENIZE_STEPS[step]}
       </p>
     </VisualFrame>
@@ -380,7 +378,7 @@ function Vocabulary() {
           <span className="eyebrow text-ink-muted">Vocabulary</span>
           <span
             className="font-mono text-xs tabular-nums transition-colors duration-300"
-            style={{ color: settled ? CORAL_DEEP : '#7a7263', fontWeight: settled ? 600 : 400 }}
+            style={{ color: settled ? ACCENT_DEEP : '#6e7671', fontWeight: settled ? 600 : 400 }}
           >
             {center.toLocaleString('en-US')} / 50,257
           </span>
@@ -397,18 +395,18 @@ function Vocabulary() {
                 style={{
                   top: y,
                   height: ROW_PITCH,
-                  backgroundColor: hero ? 'rgba(217,119,87,0.13)' : 'transparent',
+                  backgroundColor: hero ? 'rgba(4,120,87,0.13)' : 'transparent',
                 }}
               >
                 <span
                   className="font-mono text-xs tabular-nums"
-                  style={{ color: hero ? CORAL_DEEP : '#7a7263', fontWeight: hero ? 600 : 400 }}
+                  style={{ color: hero ? ACCENT_DEEP : '#6e7671', fontWeight: hero ? 600 : 400 }}
                 >
                   {r}
                 </span>
                 <span
-                  className="font-serif text-[0.9375rem]"
-                  style={{ color: hero ? '#15130f' : '#635b4d', fontWeight: hero ? 600 : 400 }}
+                  className="text-[0.9375rem]"
+                  style={{ color: hero ? '#0a0d0c' : '#5a625e', fontWeight: hero ? 600 : 400 }}
                 >
                   {vocabWord(r)}
                 </span>
@@ -424,16 +422,16 @@ function Vocabulary() {
           <div className="absolute right-1.5 top-0 h-full w-1.5 rounded-full bg-rule-soft" />
           <div
             className="absolute right-1.5 w-1.5 rounded-full transition-all duration-700"
-            style={{ top: thumbTop, height: 34, backgroundColor: settled ? CORAL : '#c9c0ae' }}
+            style={{ top: thumbTop, height: 34, backgroundColor: settled ? ACCENT : '#c3c9c6' }}
           />
         </div>
       </div>
 
-      <p className="mt-5 text-center font-serif text-[0.9375rem] text-ink">
+      <p className="mt-5 text-center text-[0.9375rem] text-ink">
         {settled ? (
           <>
             <span className="font-semibold">&ldquo;cat&rdquo;</span> lives at position{' '}
-            <span className="font-mono font-semibold" style={{ color: CORAL_DEEP }}>2543</span>.
+            <span className="font-mono font-semibold" style={{ color: ACCENT_DEEP }}>2543</span>.
           </>
         ) : (
           'One numbered list of every token the model knows…'
@@ -452,7 +450,7 @@ const LOOKUP_STEPS = [
   'The embedding matrix holds one row for every token in the vocabulary.',
   'Go to row 2543 — the row belonging to “cat”.',
   'Lift that row out. This is the embedding.',
-  'Each position holds one value: coral for positive, slate for negative.',
+  'Each position holds one value: green for positive, blue for negative.',
 ];
 
 const MATRIX_ROWS = [2538, 2539, 2540, 2541, 2542, 2543, 2544, 2545, 2546];
@@ -497,18 +495,18 @@ function Lookup() {
             }}
             aria-label={`Step ${i + 1}`}
             className="h-1.5 rounded-full transition-colors duration-200"
-            style={{ backgroundColor: i === step ? CORAL : i < step ? 'rgba(217,119,87,0.35)' : '#e6ded1' }}
+            style={{ backgroundColor: i === step ? ACCENT : i < step ? 'rgba(4,120,87,0.35)' : '#e3e7e5' }}
           />
         ))}
       </div>
 
       {/* cat → 2543 */}
       <div className="mt-5 flex items-center justify-center gap-3">
-        <span className="font-serif text-lg font-semibold italic text-ink-strong">&ldquo;cat&rdquo;</span>
+        <span className="text-lg font-semibold italic text-ink-strong">&ldquo;cat&rdquo;</span>
         <span className="text-ink-faint">→</span>
         <span
           className="rounded-lg px-3 py-1 font-mono text-sm font-medium tabular-nums text-[#f6f1e4]"
-          style={{ backgroundColor: CORAL }}
+          style={{ backgroundColor: ACCENT }}
         >
           2543
         </span>
@@ -528,13 +526,13 @@ function Lookup() {
                   key={r}
                   className="flex items-center gap-2 rounded-md px-1 py-0.5 transition-all duration-500"
                   style={{
-                    backgroundColor: isHero && highlight ? 'rgba(217,119,87,0.10)' : 'transparent',
-                    boxShadow: isHero && highlight ? `0 0 0 1.5px ${CORAL}` : 'none',
+                    backgroundColor: isHero && highlight ? 'rgba(4,120,87,0.10)' : 'transparent',
+                    boxShadow: isHero && highlight ? `0 0 0 1.5px ${ACCENT}` : 'none',
                   }}
                 >
                   <span
                     className="w-12 shrink-0 text-right font-mono text-[11px] tabular-nums"
-                    style={{ color: isHero && highlight ? CORAL_DEEP : '#9c9384', fontWeight: isHero && highlight ? 600 : 400 }}
+                    style={{ color: isHero && highlight ? ACCENT_DEEP : '#6e7671', fontWeight: isHero && highlight ? 600 : 400 }}
                   >
                     {r}
                   </span>
@@ -563,7 +561,7 @@ function Lookup() {
       >
         <div className="pt-4">
           <div className="mb-2 text-center">
-            <span className="font-mono text-[11px] font-semibold" style={{ color: CORAL_DEEP }}>
+            <span className="font-mono text-[11px] font-semibold" style={{ color: ACCENT_DEEP }}>
               row 2543
             </span>
           </div>
@@ -574,7 +572,7 @@ function Lookup() {
                   key={i}
                   className="flex flex-1 flex-col items-center justify-center rounded-lg border transition-all duration-500"
                   style={{
-                    borderColor: '#e6ded1',
+                    borderColor: '#e3e7e5',
                     backgroundColor: showNumbers ? '#fff' : cellColor(v),
                     height: showNumbers ? 74 : 34,
                     transitionDelay: `${i * 35}ms`,
@@ -593,7 +591,7 @@ function Lookup() {
                             left: '50%',
                             width: `${(Math.abs(v) / 1.2) * 45}%`,
                             transform: v >= 0 ? 'none' : 'translateX(-100%)',
-                            backgroundColor: v >= 0 ? CORAL : SLATE,
+                            backgroundColor: v >= 0 ? ACCENT : COOL,
                           }}
                         />
                       </span>
@@ -612,7 +610,7 @@ function Lookup() {
         </div>
       </div>
 
-      <p className="mt-5 min-h-[3rem] text-center font-serif text-[0.9375rem] text-ink">
+      <p className="mt-5 min-h-[3rem] text-center text-[0.9375rem] text-ink">
         {LOOKUP_STEPS[step]}
       </p>
     </VisualFrame>
@@ -624,8 +622,8 @@ function Lookup() {
    ──────────────────────────────────────────────────────────── */
 
 const DIM_MODELS = [
-  { name: 'this example', dims: 768, color: CORAL },
-  { name: 'GPT-3', dims: 12288, color: SLATE },
+  { name: 'this example', dims: 768, color: ACCENT },
+  { name: 'GPT-3', dims: 12288, color: COOL },
 ];
 
 function Dimensions() {
@@ -663,7 +661,7 @@ function Dimensions() {
         ))}
       </div>
 
-      <p className="mt-6 border-l-2 pl-4 font-serif text-[0.9375rem] leading-relaxed text-ink" style={{ borderColor: CORAL }}>
+      <p className="mt-6 border-l-2 pl-4 text-[0.9375rem] leading-relaxed text-ink" style={{ borderColor: ACCENT }}>
         Every token in the vocabulary gets a row this wide. That is why the embedding table alone runs to
         tens of millions of numbers before the model has learned anything else.
       </p>
@@ -711,12 +709,12 @@ function Fingerprint() {
 
   const verdict =
     sim > 0.97
-      ? { text: 'Still unmistakably “cat”.', tone: CORAL_DEEP }
+      ? { text: 'Still unmistakably “cat”.', tone: ACCENT_DEEP }
       : sim > 0.85
-      ? { text: 'Drifting, but still recognisable.', tone: CORAL_DEEP }
+      ? { text: 'Drifting, but still recognisable.', tone: ACCENT_DEEP }
       : sim > 0.6
-      ? { text: 'This is closer to some other word now.', tone: SLATE }
-      : { text: 'Not “cat” any more.', tone: SLATE };
+      ? { text: 'This is closer to some other word now.', tone: COOL }
+      : { text: 'Not “cat” any more.', tone: COOL };
 
   return (
     <VisualFrame
@@ -730,8 +728,8 @@ function Fingerprint() {
               className="rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all"
               style={
                 mode === m
-                  ? { backgroundColor: PLATE, color: '#f6f1e4' }
-                  : { backgroundColor: '#fff', color: '#635b4d', border: '1px solid #e6ded1' }
+                  ? { backgroundColor: PLATE, color: '#ffffff' }
+                  : { backgroundColor: '#fff', color: '#5a625e', border: '1px solid #e3e7e5' }
               }
             >
               {m === 'one' ? 'One value' : 'Whole pattern'}
@@ -751,7 +749,7 @@ function Fingerprint() {
           max={100}
           value={amount}
           onChange={(e) => setAmount(Number(e.target.value))}
-          className="flex-1 cursor-pointer accent-[#d97757]"
+          className="flex-1 cursor-pointer accent-[#047857]"
           aria-label="How much to disturb the vector"
         />
         <span className="w-10 shrink-0 text-right font-mono text-[11px] tabular-nums text-ink-muted">
@@ -784,7 +782,7 @@ function Fingerprint() {
       </div>
 
       <div className="mt-5 flex flex-wrap items-center justify-between gap-3 border-t border-rule-soft pt-4">
-        <span className="font-serif text-[0.9375rem] font-semibold" style={{ color: verdict.tone }}>
+        <span className="text-[0.9375rem] font-semibold" style={{ color: verdict.tone }}>
           {verdict.text}
         </span>
         <span className="font-mono text-xs tabular-nums text-ink-muted">
@@ -869,7 +867,7 @@ function SemanticSpace() {
             cy={SPACE_POINTS[0].y}
             r={210}
             fill="none"
-            stroke={CORAL}
+            stroke={ACCENT}
             strokeWidth={2}
             strokeDasharray="8 10"
             opacity={p > 0.85 ? (p - 0.85) / 0.15 * 0.5 : 0}
@@ -881,7 +879,7 @@ function SemanticSpace() {
                 cx={pt.cx}
                 cy={pt.cy}
                 r={pt.hero ? 15 : 11}
-                fill={pt.hero ? CORAL : pt.near ? CORAL : SLATE}
+                fill={pt.hero ? ACCENT : pt.near ? ACCENT : COOL}
                 opacity={pt.hero ? 1 : 0.75}
               />
               <text
@@ -890,8 +888,8 @@ function SemanticSpace() {
                 textAnchor="middle"
                 fontSize={pt.hero ? 30 : 26}
                 fontWeight={pt.hero ? 600 : 400}
-                fill={pt.hero ? '#15130f' : '#635b4d'}
-                style={{ fontFamily: 'var(--font-newsreader), Georgia, serif' }}
+                fill={pt.hero ? '#0a0d0c' : '#5a625e'}
+                style={{ fontFamily: 'var(--font-inter), system-ui, sans-serif' }}
                 opacity={0.35 + 0.65 * clamp((p - i * 0.03) * 1.6, 0, 1)}
               >
                 {pt.w}
@@ -914,7 +912,7 @@ function SemanticSpace() {
             setPlaying(false);
             setProgress(Number(e.target.value));
           }}
-          className="flex-1 cursor-pointer accent-[#d97757]"
+          className="flex-1 cursor-pointer accent-[#047857]"
           aria-label="Training progress"
         />
         <span className="w-10 shrink-0 text-right font-mono text-[11px] tabular-nums text-ink-muted">
@@ -922,7 +920,7 @@ function SemanticSpace() {
         </span>
       </div>
 
-      <p className="mt-4 text-center font-serif text-[0.9375rem] text-ink">
+      <p className="mt-4 text-center text-[0.9375rem] text-ink">
         {p < 0.25
           ? 'Before training, the vectors are random. Position means nothing.'
           : p < 0.8
@@ -938,11 +936,11 @@ function SemanticSpace() {
    ──────────────────────────────────────────────────────────── */
 
 const RECAP = [
-  { label: 'word', el: <span className="font-serif text-xl font-semibold italic text-ink-strong">&ldquo;cat&rdquo;</span> },
-  { label: 'token', el: <span className="rounded-lg border border-rule bg-surface px-2.5 py-1 font-serif text-base font-semibold text-ink-strong">cat</span> },
+  { label: 'word', el: <span className="text-xl font-semibold italic text-ink-strong">&ldquo;cat&rdquo;</span> },
+  { label: 'token', el: <span className="rounded-lg border border-rule bg-surface px-2.5 py-1 text-base font-semibold text-ink-strong">cat</span> },
   { label: 'token ID', el: <span className="rounded-lg px-2.5 py-1 font-mono text-sm tabular-nums text-[#f6f1e4]" style={{ backgroundColor: PLATE }}>2543</span> },
   { label: 'vector', el: <span className="font-mono text-xs tabular-nums text-ink-strong">[ 0.82 &minus;0.41 … ]</span> },
-  { label: 'a point in meaning-space', el: <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: CORAL, boxShadow: '0 0 0 6px rgba(217,119,87,0.16)' }} /> },
+  { label: 'a point in meaning-space', el: <span className="block h-4 w-4 rounded-full" style={{ backgroundColor: ACCENT, boxShadow: '0 0 0 6px rgba(4,120,87,0.16)' }} /> },
 ];
 
 function Recap() {

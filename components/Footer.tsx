@@ -7,10 +7,10 @@ export default function Footer() {
       <div className="measure-wide flex flex-col gap-6 px-4 py-10 sm:flex-row sm:items-end sm:justify-between sm:px-6">
         <div className="space-y-2">
           <Link href="/" className="flex items-baseline gap-px">
-            <span className="font-serif text-lg font-semibold tracking-tight text-ink-strong">
+            <span className="text-lg font-semibold tracking-tight text-ink-strong">
               Token
             </span>
-            <span className="font-serif text-lg font-semibold italic tracking-tight text-accent">
+            <span className="text-lg font-semibold tracking-tight text-accent">
               Flight
             </span>
           </Link>

@@ -14,8 +14,8 @@ export default function ArticleCard({ article, variant = 'row' }: ArticleCardPro
     return (
       <article className="paper-card group p-5">
         <Link href={`/blog/${article.slug}`} className="block space-y-2.5">
-          <span className="eyebrow block text-ember">{article.category}</span>
-          <h3 className="font-serif text-h3 font-semibold text-ink-strong transition-colors duration-200 group-hover:text-accent">
+          <span className="eyebrow block text-accent">{article.category}</span>
+          <h3 className="text-h3 font-semibold text-ink-strong transition-colors duration-200 group-hover:text-accent">
             {article.title}
           </h3>
           <p className="text-meta leading-relaxed text-ink-muted line-clamp-2">
@@ -38,17 +38,17 @@ export default function ArticleCard({ article, variant = 'row' }: ArticleCardPro
       >
         {/* Meta rail */}
         <div className="flex flex-row items-center gap-3 sm:flex-col sm:items-start sm:gap-1.5 sm:pt-1.5">
-          <span className="eyebrow text-ember">{article.category}</span>
+          <span className="eyebrow text-accent">{article.category}</span>
           <span className="text-meta text-ink-faint">{article.readTime}</span>
           <span className="hidden text-meta text-ink-faint sm:block">{article.publishedAt}</span>
         </div>
 
         {/* Body */}
         <div className="space-y-2.5">
-          <h3 className="font-serif text-h2 font-semibold text-ink-strong transition-colors duration-200 group-hover:text-accent">
+          <h3 className="text-h2 font-semibold text-ink-strong transition-colors duration-200 group-hover:text-accent">
             {article.title}
           </h3>
-          <p className="max-w-[46rem] font-serif text-[1.0625rem] leading-relaxed text-ink-muted">
+          <p className="max-w-[46rem] text-[1.0625rem] leading-relaxed text-ink-muted">
             {article.excerpt}
           </p>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pt-1">

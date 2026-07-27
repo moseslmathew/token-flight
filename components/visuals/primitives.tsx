@@ -98,11 +98,12 @@ export function useClock(playing: boolean, resetKey: number = 0) {
   return t;
 }
 
-/** Palette carried over from the source animations, shared by the explainers. */
-export const CORAL = '#d97757';
-export const CORAL_DEEP = '#bc5b3b';
-export const SLATE = '#6b89a7';
-export const PLATE = '#2a2823';
+/** Shared explainer palette: emerald accent, blue counter-colour, ink plate. */
+export const ACCENT = '#047857';
+export const ACCENT_DEEP = '#065f46';
+export const COOL = '#2563eb';
+export const PLATE = '#0a0d0c';
+export const RULE = '#e3e7e5';
 
 export const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
@@ -138,7 +139,7 @@ export function VisualFrame({
   return (
     <figure className="overflow-hidden rounded-2xl border border-rule bg-surface">
       <figcaption className="flex items-center justify-between gap-3 border-b border-rule-soft bg-paper-deep/50 px-4 py-3 sm:px-5">
-        <span className="eyebrow flex min-w-0 items-center gap-2 text-ember">
+        <span className="eyebrow flex min-w-0 items-center gap-2 text-accent">
           <Sparkles className="h-3.5 w-3.5 shrink-0" />
           <span className="truncate">{label}</span>
         </span>
@@ -146,7 +147,7 @@ export function VisualFrame({
       </figcaption>
       <div className="p-4 sm:p-6">{children}</div>
       {caption && (
-        <p className="-mt-1 px-4 pb-5 font-serif text-[0.9375rem] leading-relaxed text-ink-muted sm:px-6">
+        <p className="-mt-1 px-4 pb-5 text-[0.9375rem] leading-relaxed text-ink-muted sm:px-6">
           {caption}
         </p>
       )}
@@ -187,7 +188,7 @@ export function Connector({ active }: { active: boolean }) {
           y2="24"
           strokeWidth="2"
           strokeLinecap="round"
-          stroke={active ? '#4c449b' : '#e6ded1'}
+          stroke={active ? ACCENT : RULE}
           className={active ? 'moe-flow' : ''}
           style={{ transition: 'stroke 0.4s ease' }}
         />

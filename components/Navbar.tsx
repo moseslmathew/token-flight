@@ -35,10 +35,10 @@ export default function Navbar() {
       <div className="measure-wide flex h-[4.5rem] items-center justify-between gap-6 px-4 sm:px-6">
         {/* Wordmark */}
         <Link href="/" className="group flex items-baseline gap-px shrink-0">
-          <span className="font-serif text-[1.375rem] font-semibold tracking-tight text-ink-strong">
+          <span className="text-[1.375rem] font-semibold tracking-tight text-ink-strong">
             Token
           </span>
-          <span className="font-serif text-[1.375rem] font-semibold italic tracking-tight text-accent transition-colors duration-200 group-hover:text-ember">
+          <span className="text-[1.375rem] font-semibold tracking-tight text-accent transition-colors duration-200 group-hover:text-accent">
             Flight
           </span>
         </Link>

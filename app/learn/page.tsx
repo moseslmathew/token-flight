@@ -15,11 +15,11 @@ export default function LearnPage() {
     <div className="measure-wide px-4 pb-8 pt-14 sm:px-6 sm:pt-20">
       {/* Masthead */}
       <header className="animate-rise-in max-w-[44rem] space-y-5">
-        <span className="eyebrow block text-ember">Interactive Engineering Guides</span>
-        <h1 className="font-serif text-h1 font-semibold text-ink-strong">
+        <span className="eyebrow block text-accent">Interactive Engineering Guides</span>
+        <h1 className="text-h1 font-semibold text-ink-strong">
           Understanding artificial intelligence from first principles
         </h1>
-        <p className="font-serif text-lede text-ink-muted">
+        <p className="text-lede text-ink-muted">
           In-depth technical notes, visual architectural breakdowns, and code implementations —
           written to be read slowly.
         </p>

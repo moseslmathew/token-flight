@@ -119,7 +119,7 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
                   <Link2 className="h-3.5 w-3.5 text-ink-faint" />
                   Copy link
                 </span>
-                {copied && <Check className="h-3.5 w-3.5 text-sage" />}
+                {copied && <Check className="h-3.5 w-3.5 text-accent" />}
               </button>
               <div className="my-0.5 border-t border-rule-soft" />
               <button
@@ -151,7 +151,7 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
             <div className="mx-auto h-1 w-10 rounded-full bg-rule" />
 
             <div className="space-y-1 text-center">
-              <h3 className="font-serif text-h3 font-semibold text-ink-strong">Share report</h3>
+              <h3 className="text-h3 font-semibold text-ink-strong">Share report</h3>
               <p className="line-clamp-1 text-meta text-ink-muted">{title}</p>
             </div>
 
@@ -159,7 +159,7 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
               {[
                 {
                   onClick: handleCopyLink,
-                  icon: copied ? <Check className="h-5 w-5 text-sage" /> : <Link2 className="h-5 w-5" />,
+                  icon: copied ? <Check className="h-5 w-5 text-accent" /> : <Link2 className="h-5 w-5" />,
                   label: copied ? 'Copied' : 'Copy link',
                 },
                 { onClick: shareToTwitter, icon: <Twitter className="h-5 w-5" />, label: 'X / Twitter' },
@@ -195,9 +195,9 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
 /* Three-part analysis, set as ruled columns rather than filled boxes */
 function Analysis({ item, dense = false }: { item: AINewsItem; dense?: boolean }) {
   const parts = [
-    { label: 'What changed', body: item.content.whatChanged, rule: 'border-accent/45' },
-    { label: 'Why it matters', body: item.content.whyItMatters, rule: 'border-ember/50' },
-    { label: 'Future impact', body: item.content.futureImpact, rule: 'border-sage/50' },
+    { label: 'What changed', body: item.content.whatChanged, rule: 'border-accent' },
+    { label: 'Why it matters', body: item.content.whyItMatters, rule: 'border-cool' },
+    { label: 'Future impact', body: item.content.futureImpact, rule: 'border-ink-faint/50' },
   ];
 
   return (
@@ -206,7 +206,7 @@ function Analysis({ item, dense = false }: { item: AINewsItem; dense?: boolean }
         <div key={part.label} className={`border-l-2 pl-4 sm:pl-5 ${part.rule}`}>
           <span className="eyebrow block text-ink-muted">{part.label}</span>
           <p
-            className={`mt-2 font-serif leading-relaxed text-ink ${
+            className={`mt-2 leading-relaxed text-ink ${
               dense ? 'text-[1rem]' : 'text-[1.0625rem]'
             }`}
           >
@@ -246,9 +246,9 @@ export default function LatestAINewsPage() {
     <div className="measure-wide px-4 pb-8 pt-14 sm:px-6 sm:pt-20">
       {/* Masthead */}
       <header className="animate-rise-in max-w-[44rem] space-y-5">
-        <span className="eyebrow block text-ember">The Dispatch</span>
-        <h1 className="font-serif text-h1 font-semibold text-ink-strong">Latest AI news</h1>
-        <p className="font-serif text-lede text-ink-muted">
+        <span className="eyebrow block text-accent">The Dispatch</span>
+        <h1 className="text-h1 font-semibold text-ink-strong">Latest AI news</h1>
+        <p className="text-lede text-ink-muted">
           Frontier model releases, research and infrastructure — each one read closely and reduced
           to what changed, why it matters, and where it leads.
         </p>
@@ -294,16 +294,16 @@ export default function LatestAINewsPage() {
         <article id={featuredNews.slug} className="scroll-mt-28 border-b border-rule py-14">
           <div className="max-w-[46rem] space-y-5">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="eyebrow text-ember">Featured report</span>
+              <span className="eyebrow text-accent">Featured report</span>
               <span className="text-ink-faint">·</span>
               <span className="eyebrow text-ink-faint">{featuredNews.category}</span>
             </div>
 
-            <h2 className="font-serif text-display font-semibold text-ink-strong">
+            <h2 className="text-display font-semibold text-ink-strong">
               {featuredNews.title}
             </h2>
 
-            <p className="font-serif text-lede text-ink-muted">{featuredNews.excerpt}</p>
+            <p className="text-lede text-ink-muted">{featuredNews.excerpt}</p>
 
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-meta text-ink-faint">
               <span>{featuredNews.publishedAt}</span>
@@ -323,8 +323,8 @@ export default function LatestAINewsPage() {
               <span className="eyebrow block text-ink-faint">Technical highlights</span>
               <ul className="mt-4 space-y-2.5">
                 {featuredNews.content.technicalHighlights.map((highlight, idx) => (
-                  <li key={idx} className="flex gap-3 font-serif text-[1.0625rem] text-ink">
-                    <span aria-hidden="true" className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-ember" />
+                  <li key={idx} className="flex gap-3 text-[1.0625rem] text-ink">
+                    <span aria-hidden="true" className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-accent" />
                     <span>{highlight}</span>
                   </li>
                 ))}
@@ -356,18 +356,18 @@ export default function LatestAINewsPage() {
         {feedNews.map((item) => (
           <article key={item.id} id={item.slug} className="scroll-mt-28 py-12">
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="eyebrow text-ember">{item.category}</span>
+              <span className="eyebrow text-accent">{item.category}</span>
               <span className="text-ink-faint">·</span>
               <span className="text-meta text-ink-faint">{item.publishedAt}</span>
               <span className="text-ink-faint">·</span>
               <span className="text-meta text-ink-faint">{item.readTime}</span>
             </div>
 
-            <h2 className="mt-4 max-w-[42rem] font-serif text-h2 font-semibold text-ink-strong">
+            <h2 className="mt-4 max-w-[42rem] text-h2 font-semibold text-ink-strong">
               {item.title}
             </h2>
 
-            <p className="mt-3 max-w-[42rem] font-serif text-[1.0625rem] leading-relaxed text-ink-muted">
+            <p className="mt-3 max-w-[42rem] text-[1.0625rem] leading-relaxed text-ink-muted">
               {item.excerpt}
             </p>
 

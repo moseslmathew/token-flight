@@ -48,14 +48,14 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
         {/* Title block */}
         <header className="measure animate-rise-in mt-10 space-y-5">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-            <span className="eyebrow text-ember">{article.category}</span>
+            <span className="eyebrow text-accent">{article.category}</span>
             <span className="text-ink-faint">·</span>
             <span className="eyebrow text-ink-faint">{article.difficulty}</span>
           </div>
 
-          <h1 className="font-serif text-h1 font-semibold text-ink-strong">{article.title}</h1>
+          <h1 className="text-h1 font-semibold text-ink-strong">{article.title}</h1>
 
-          <p className="font-serif text-lede text-ink-muted">{article.excerpt}</p>
+          <p className="text-lede text-ink-muted">{article.excerpt}</p>
 
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-rule pt-5 text-meta text-ink-faint">
             <span className="text-ink-muted">{article.author.name}</span>
@@ -68,15 +68,15 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
 
         {/* Lead */}
         <div className="measure mt-12">
-          <p className="font-serif text-lede text-ink-strong">{article.content.intro}</p>
+          <p className="text-lede text-ink-strong">{article.content.intro}</p>
         </div>
 
         {/* Sections */}
         {article.content.sections.map((sec, idx) => (
           <section key={idx} className="mt-16">
             <div className="measure space-y-5">
-              <h2 className="font-serif text-h2 font-semibold text-ink-strong">{sec.heading}</h2>
-              <p className="whitespace-pre-line font-serif text-body text-ink">{sec.body}</p>
+              <h2 className="text-h2 font-semibold text-ink-strong">{sec.heading}</h2>
+              <p className="whitespace-pre-line text-body text-ink">{sec.body}</p>
             </div>
 
             {sec.visual && (
@@ -97,9 +97,9 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
             )}
 
             {sec.keyTakeaway && (
-              <aside className="measure mt-10 border-l-2 border-ember pl-5 sm:pl-6">
-                <span className="eyebrow block text-ember">Key takeaway</span>
-                <p className="mt-2 font-serif text-[1.0625rem] leading-relaxed text-ink">
+              <aside className="measure mt-10 border-l-2 border-accent pl-5 sm:pl-6">
+                <span className="eyebrow block text-accent">Key takeaway</span>
+                <p className="mt-2 text-[1.0625rem] leading-relaxed text-ink">
                   {sec.keyTakeaway}
                 </p>
               </aside>
@@ -110,7 +110,7 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
         {/* Closing summary */}
         <div className="measure mt-20 border-t border-rule pt-10">
           <span className="eyebrow block text-ink-faint">In summary</span>
-          <p className="mt-3 font-serif text-lede text-ink-strong">{article.content.summary}</p>
+          <p className="mt-3 text-lede text-ink-strong">{article.content.summary}</p>
         </div>
       </article>
 

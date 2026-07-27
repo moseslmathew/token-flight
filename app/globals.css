@@ -1,87 +1,87 @@
 @import "tailwindcss";
 
 /* ============================================================
-   TokenFlight — warm editorial design system
-   Paper & ink palette, fluid type scale, reading measures.
+   TokenFlight — pure white / deep emerald design system
+   Neutral cool greys, one saturated accent, geometric sans.
    ============================================================ */
 
 @theme {
   /* ── Surfaces ─────────────────────────────────────────── */
-  --color-paper: #faf8f4;
-  --color-paper-deep: #f1ece2;
+  --color-paper: #ffffff;
+  --color-paper-deep: #f5f7f6;
   --color-surface: #ffffff;
 
-  /* ── Ink ──────────────────────────────────────────────── */
-  /* Muted/faint are tuned to clear 4.5:1 on --color-paper at small sizes */
-  --color-ink-strong: #15130f;
-  --color-ink: #2a2620;
-  --color-ink-muted: #635b4d;
-  --color-ink-faint: #7a7263;
+  /* ── Ink — cool neutrals, tuned to clear 4.5:1 on white ─ */
+  --color-ink-strong: #0a0d0c;
+  --color-ink: #1f2523;
+  --color-ink-muted: #5a625e;
+  --color-ink-faint: #6e7671;
 
   /* ── Rules & edges ────────────────────────────────────── */
-  --color-rule: #e6ded1;
-  --color-rule-soft: #f0eae0;
+  --color-rule: #e3e7e5;
+  --color-rule-soft: #eef1f0;
 
-  /* ── Accents ──────────────────────────────────────────── */
-  --color-accent: #4c449b;
-  --color-accent-deep: #37307a;
-  --color-accent-soft: #eeecf8;
-  --color-ember: #b0532e;
-  --color-ember-soft: #f9efe9;
-  --color-sage: #3f7a5c;
-  --color-sage-soft: #eaf3ee;
+  /* ── Accent: deep emerald ─────────────────────────────── */
+  --color-accent: #047857;
+  --color-accent-deep: #065f46;
+  --color-accent-soft: #ecfdf5;
+  --color-accent-ring: #a7f3d0;
+
+  /* ── Data counter-colour and warning ──────────────────── */
+  --color-cool: #2563eb;
+  --color-cool-soft: #eff6ff;
+  --color-warn: #c2410c;
+  --color-warn-soft: #fff7ed;
 
   /* ── Code ─────────────────────────────────────────────── */
-  --color-code-bg: #1f1c18;
-  --color-code-surface: #2a2621;
-  --color-code-ink: #e9e3d8;
-  --color-code-faint: #9a9184;
+  --color-code-bg: #0d1117;
+  --color-code-surface: #161b22;
+  --color-code-ink: #e6edf3;
+  --color-code-faint: #8b949e;
 
   /* ── Type families ────────────────────────────────────── */
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-serif: var(--font-newsreader), "Iowan Old Style", Georgia, serif;
   --font-mono: var(--font-jetbrains), ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* ── Fluid type scale ─────────────────────────────────── */
+  /* ── Fluid type scale, set for a geometric sans ───────── */
   --text-micro: 0.6875rem;
   --text-micro--line-height: 1.4;
-  --text-micro--letter-spacing: 0.14em;
+  --text-micro--letter-spacing: 0.09em;
 
   --text-meta: clamp(0.8125rem, 0.8rem + 0.08vw, 0.875rem);
   --text-meta--line-height: 1.5;
 
-  --text-body: clamp(1.0625rem, 1.02rem + 0.22vw, 1.1875rem);
-  --text-body--line-height: 1.75;
+  --text-body: clamp(1rem, 0.97rem + 0.16vw, 1.0625rem);
+  --text-body--line-height: 1.7;
 
-  --text-lede: clamp(1.1875rem, 1.11rem + 0.36vw, 1.375rem);
+  --text-lede: clamp(1.0625rem, 1.01rem + 0.28vw, 1.1875rem);
   --text-lede--line-height: 1.6;
 
-  --text-h3: clamp(1.0625rem, 1.01rem + 0.28vw, 1.25rem);
-  --text-h3--line-height: 1.35;
+  --text-h3: clamp(1rem, 0.96rem + 0.22vw, 1.125rem);
+  --text-h3--line-height: 1.4;
+  --text-h3--letter-spacing: -0.011em;
 
-  --text-h2: clamp(1.375rem, 1.24rem + 0.62vw, 1.75rem);
-  --text-h2--line-height: 1.25;
-  --text-h2--letter-spacing: -0.011em;
+  --text-h2: clamp(1.3125rem, 1.2rem + 0.55vw, 1.625rem);
+  --text-h2--line-height: 1.3;
+  --text-h2--letter-spacing: -0.021em;
 
-  --text-h1: clamp(1.875rem, 1.5rem + 1.6vw, 2.875rem);
-  --text-h1--line-height: 1.1;
-  --text-h1--letter-spacing: -0.021em;
+  --text-h1: clamp(1.875rem, 1.52rem + 1.5vw, 2.75rem);
+  --text-h1--line-height: 1.12;
+  --text-h1--letter-spacing: -0.033em;
 
-  --text-display: clamp(1.9375rem, 1.5rem + 2.2vw, 3.25rem);
-  --text-display--line-height: 1.06;
-  --text-display--letter-spacing: -0.025em;
+  --text-display: clamp(2rem, 1.6rem + 1.95vw, 3.125rem);
+  --text-display--line-height: 1.08;
+  --text-display--letter-spacing: -0.037em;
 }
 
 @layer base {
   :root {
-    /* Reading measures — the text column stays narrow, figures breathe wider */
-    --measure: 41rem;
+    --measure: 40rem;
     --measure-wide: 52rem;
   }
 
   html {
     scroll-behavior: smooth;
-    /* Keep anchored headings clear of the sticky masthead */
     scroll-padding-top: 6rem;
   }
 
@@ -94,15 +94,11 @@
     overflow-x: hidden;
   }
 
-  /* Serif copy gets optical sizing and old-style figures where available */
-  .font-serif {
-    font-optical-sizing: auto;
-  }
-
   h1,
   h2,
   h3 {
     text-wrap: balance;
+    font-weight: 650;
   }
 
   p {
@@ -110,7 +106,7 @@
   }
 
   ::selection {
-    background-color: var(--color-accent-soft);
+    background-color: var(--color-accent-ring);
     color: var(--color-accent-deep);
   }
 
@@ -139,26 +135,26 @@
     margin-inline: auto;
   }
 
-  /* ── Editorial eyebrow label ────────────────────────── */
+  /* ── Small caps label ───────────────────────────────── */
   .eyebrow {
     font-family: var(--font-sans);
     font-size: var(--text-micro);
     font-weight: 600;
-    letter-spacing: 0.14em;
+    letter-spacing: 0.09em;
     text-transform: uppercase;
   }
 
-  /* ── Quiet surface card ─────────────────────────────── */
+  /* ── Bordered card ──────────────────────────────────── */
   .paper-card {
     background-color: var(--color-surface);
     border: 1px solid var(--color-rule);
-    border-radius: 1rem;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+    border-radius: 0.75rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
   }
 
   .paper-card:hover {
-    border-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-rule));
-    box-shadow: 0 12px 32px -20px rgba(38, 30, 16, 0.35);
+    border-color: var(--color-accent-ring);
+    box-shadow: 0 8px 24px -16px rgba(4, 120, 87, 0.4);
   }
 
   /* ── Horizontal filter rail: fades at the scroll edge ─ */
@@ -179,13 +175,13 @@
     background-image: linear-gradient(var(--color-accent), var(--color-accent));
     background-repeat: no-repeat;
     background-position: 0 100%;
-    background-size: 0% 1.5px;
-    transition: background-size 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    background-size: 0% 2px;
+    transition: background-size 0.24s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   .link-underline:hover,
   .link-underline[data-active="true"] {
-    background-size: 100% 1.5px;
+    background-size: 100% 2px;
   }
 }
 
@@ -206,12 +202,12 @@
   background: var(--color-paper);
 }
 ::-webkit-scrollbar-thumb {
-  background: #dcd3c4;
+  background: #d3d8d6;
   border-radius: 999px;
   border: 3px solid var(--color-paper);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #c8bda9;
+  background: #b8bfbc;
 }
 
 /* ── Entrance: gentle rise ───────────────────────────────── */
@@ -227,7 +223,7 @@
 }
 
 .animate-rise-in {
-  animation: rise-in 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation: rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 /* ── Share menu pop-in ───────────────────────────────────── */

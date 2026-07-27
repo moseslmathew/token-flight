@@ -82,12 +82,12 @@ function DenseVsSparse() {
       <div className="space-y-1">
         <div className="flex items-center justify-between text-[10px] font-semibold">
           <span className="text-ink-muted uppercase tracking-wider">Work done</span>
-          <span className={tone === 'rose' ? 'text-ember' : 'text-sage'}>{pct}%</span>
+          <span className={tone === 'rose' ? 'text-warn' : 'text-accent'}>{pct}%</span>
         </div>
         <div className="h-2 rounded-full bg-rule overflow-hidden">
           <div
             className={`h-full rounded-full transition-all duration-700 ${
-              tone === 'rose' ? 'bg-ember' : 'bg-sage'
+              tone === 'rose' ? 'bg-warn' : 'bg-accent'
             }`}
             style={{ width: `${pct}%` }}
           />
@@ -302,7 +302,7 @@ function RouterFlow() {
                   <div className="text-[10px] font-semibold">
                     {showPick ? (
                       picked ? (
-                        <span className="text-sage">
+                        <span className="text-accent">
                           {showWork ? 'running…' : 'selected'}
                         </span>
                       ) : (
@@ -324,7 +324,7 @@ function RouterFlow() {
       {/* Stage 4: the blended output */}
       <div
         className={`rounded-xl border px-4 py-3 transition-colors duration-300 ${
-          showOut ? 'border-sage/45 bg-sage-soft' : 'border-rule bg-paper-deep/60'
+          showOut ? 'border-accent/45 bg-accent-soft' : 'border-rule bg-paper-deep/60'
         }`}
       >
         <div className="text-xs font-bold text-ink-strong mb-1">Layer output</div>
@@ -454,14 +454,14 @@ function TopKGrid() {
           </div>
           <div className="text-[10px] text-ink-muted">per token, per layer</div>
         </div>
-        <div className="rounded-xl border border-sage/30 bg-sage-soft p-3">
-          <div className="text-[10px] font-semibold uppercase tracking-wider text-sage">
+        <div className="rounded-xl border border-accent/30 bg-accent-soft p-3">
+          <div className="text-[10px] font-semibold uppercase tracking-wider text-accent">
             You pay
           </div>
-          <div className="text-lg font-extrabold text-sage leading-tight">
+          <div className="text-lg font-extrabold text-accent leading-tight">
             {share < 10 ? share.toFixed(1) : share.toFixed(0)}%
           </div>
-          <div className="text-[10px] text-sage/80">of the expert compute</div>
+          <div className="text-[10px] text-accent/80">of the expert compute</div>
         </div>
       </div>
     </VisualFrame>
@@ -616,7 +616,7 @@ function LoadBalance() {
           <div key={i} className="flex-1 flex flex-col items-center gap-1.5 h-full justify-end">
             <span
               className={`text-[10px] font-bold transition-colors ${
-                v < 3 ? 'text-ink-faint/55' : v > 25 ? 'text-ember' : 'text-ink-muted'
+                v < 3 ? 'text-ink-faint/55' : v > 25 ? 'text-warn' : 'text-ink-muted'
               }`}
             >
               {v.toFixed(0)}%
@@ -625,11 +625,11 @@ function LoadBalance() {
               className={`w-full rounded-t-md transition-all duration-700 ease-out ${
                 mode === 'collapse'
                   ? v > 25
-                    ? 'bg-ember'
+                    ? 'bg-warn'
                     : v < 3
                     ? 'bg-rule'
                     : 'bg-ink-faint/45'
-                  : 'bg-sage'
+                  : 'bg-accent'
               }`}
               style={{ height: `${(v / max) * 100}%` }}
             />
@@ -641,7 +641,7 @@ function LoadBalance() {
       <div className="grid grid-cols-2 gap-2 mt-4">
         <div
           className={`rounded-xl border p-3 transition-colors ${
-            mode === 'collapse' ? 'border-ember/30 bg-ember-soft' : 'border-rule bg-surface'
+            mode === 'collapse' ? 'border-warn/30 bg-warn-soft' : 'border-rule bg-surface'
           }`}
         >
           <div className="text-[10px] font-semibold uppercase tracking-wider text-ink-faint">
@@ -649,7 +649,7 @@ function LoadBalance() {
           </div>
           <div
             className={`text-lg font-extrabold leading-tight ${
-              mode === 'collapse' ? 'text-ember' : 'text-ink-strong'
+              mode === 'collapse' ? 'text-warn' : 'text-ink-strong'
             }`}
           >
             {busiest.toFixed(0)}% of tokens
@@ -662,7 +662,7 @@ function LoadBalance() {
         </div>
         <div
           className={`rounded-xl border p-3 transition-colors ${
-            mode === 'collapse' ? 'border-rule bg-paper-deep/60' : 'border-sage/30 bg-sage-soft'
+            mode === 'collapse' ? 'border-rule bg-paper-deep/60' : 'border-accent/30 bg-accent-soft'
           }`}
         >
           <div className="text-[10px] font-semibold uppercase tracking-wider text-ink-faint">
@@ -670,7 +670,7 @@ function LoadBalance() {
           </div>
           <div
             className={`text-lg font-extrabold leading-tight ${
-              mode === 'collapse' ? 'text-ink-strong' : 'text-sage'
+              mode === 'collapse' ? 'text-ink-strong' : 'text-accent'
             }`}
           >
             {idle} of 8
