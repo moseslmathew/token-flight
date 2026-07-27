@@ -157,17 +157,11 @@
     box-shadow: 0 8px 24px -16px rgba(4, 120, 87, 0.4);
   }
 
-  /* ── Horizontal filter rail: fades at the scroll edge ─ */
+  /* ── Horizontal filter rail: smooth mobile touch scrolling ─ */
   .filter-rail {
-    -webkit-mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent 100%);
-    mask-image: linear-gradient(to right, #000 calc(100% - 2.5rem), transparent 100%);
-  }
-
-  @media (min-width: 1024px) {
-    .filter-rail {
-      -webkit-mask-image: none;
-      mask-image: none;
-    }
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    overscroll-behavior-x: contain;
   }
 
   /* ── Underline that grows on hover / active nav ─────── */

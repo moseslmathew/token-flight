@@ -256,7 +256,7 @@ export default function LatestAINewsPage() {
 
       {/* Category filter */}
       <div className="mt-12 flex items-center justify-between gap-6 border-b border-rule">
-        <div className="no-scrollbar filter-rail flex items-center gap-6 overflow-x-auto py-3.5 pr-6 sm:gap-7 lg:pr-0">
+        <div className="no-scrollbar filter-rail flex min-w-0 w-full items-center gap-6 overflow-x-auto py-3.5 pr-10 sm:gap-7 lg:pr-0">
           {categories.map((cat) => {
             const isSelected = cat === 'All' ? isAllSelected : selectedCategory === cat;
             const count =
