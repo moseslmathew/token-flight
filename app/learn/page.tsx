@@ -29,8 +29,8 @@ export default function LearnPage() {
       </header>
 
       {/* Category filter */}
-      <div className="mt-12 flex items-center justify-between gap-6 border-b border-rule">
-        <div className="no-scrollbar filter-rail flex min-w-0 w-full items-center gap-7 overflow-x-auto py-3.5 pr-10">
+      <div className="mt-12 border-b border-rule">
+        <div className="no-scrollbar filter-rail flex items-center gap-7 overflow-x-auto py-3.5 pr-6">
           {activeCategories.map((cat) => {
             const isSelected = selectedCategory === cat;
             const count = ARTICLES.filter((a) => a.category === cat).length;
