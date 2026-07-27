@@ -302,6 +302,12 @@ export default function LatestAINewsPage() {
               <span className="eyebrow text-accent">Featured report</span>
               <span className="text-ink-faint">·</span>
               <span className="eyebrow text-ink-faint">{featuredNews.category}</span>
+              <span className="text-ink-faint">·</span>
+              <span className="text-meta text-ink-faint">{featuredNews.publishedAt}</span>
+              <span className="text-ink-faint">·</span>
+              <span className="text-meta text-ink-faint">{featuredNews.readTime}</span>
+              <span className="text-ink-faint">·</span>
+              <span className="text-meta text-ink-muted">{featuredNews.source}</span>
             </div>
 
             <h2 className="text-display font-semibold text-ink-strong">
@@ -309,14 +315,6 @@ export default function LatestAINewsPage() {
             </h2>
 
             <p className="text-lede text-ink-muted">{featuredNews.excerpt}</p>
-
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-meta text-ink-faint">
-              <span>{featuredNews.publishedAt}</span>
-              <span>·</span>
-              <span>{featuredNews.readTime}</span>
-              <span>·</span>
-              <span className="text-ink-muted">{featuredNews.source}</span>
-            </div>
           </div>
 
           <div className="mt-10">
