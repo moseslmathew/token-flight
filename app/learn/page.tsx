@@ -26,8 +26,8 @@ export default function LearnPage() {
       </header>
 
       {/* Category filter */}
-      <div className="mt-12 flex items-end justify-between gap-6 border-b border-rule pb-3">
-        <div className="no-scrollbar flex items-center gap-7 overflow-x-auto">
+      <div className="mt-12 flex items-center justify-between gap-6 border-b border-rule">
+        <div className="no-scrollbar flex items-center gap-7 overflow-x-auto py-3.5">
           {CATEGORIES.map((cat) => {
             const isSelected = selectedCategory === cat;
             const count = ARTICLES.filter((a) => a.category === cat).length;
@@ -36,14 +36,14 @@ export default function LearnPage() {
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
                 aria-pressed={isSelected}
-                className={`relative -mb-3 shrink-0 whitespace-nowrap pb-3 text-[0.9375rem] font-medium transition-colors duration-200 ${
+                className={`relative shrink-0 whitespace-nowrap py-1 text-[0.9375rem] font-medium transition-colors duration-200 cursor-pointer ${
                   isSelected ? 'text-ink-strong' : 'text-ink-muted hover:text-ink-strong'
                 }`}
               >
                 {cat}
                 <span className="ml-1.5 text-meta text-ink-faint">{count}</span>
                 <span
-                  className={`absolute inset-x-0 bottom-0 h-px transition-colors duration-200 ${
+                  className={`absolute inset-x-0 -bottom-[0.875rem] h-[2px] transition-colors duration-200 ${
                     isSelected ? 'bg-accent' : 'bg-transparent'
                   }`}
                 />

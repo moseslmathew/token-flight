@@ -255,8 +255,8 @@ export default function LatestAINewsPage() {
       </header>
 
       {/* Category filter */}
-      <div className="mt-12 flex items-end justify-between gap-6 border-b border-rule pb-3">
-        <div className="no-scrollbar filter-rail flex items-center gap-6 overflow-x-auto pr-6 sm:gap-7 lg:pr-0">
+      <div className="mt-12 flex items-center justify-between gap-6 border-b border-rule">
+        <div className="no-scrollbar filter-rail flex items-center gap-6 overflow-x-auto py-3.5 pr-6 sm:gap-7 lg:pr-0">
           {categories.map((cat) => {
             const isSelected = cat === 'All' ? isAllSelected : selectedCategory === cat;
             const count =
@@ -268,14 +268,14 @@ export default function LatestAINewsPage() {
                 key={cat}
                 onClick={() => setSelectedCategory(cat === 'All' ? null : isSelected ? null : cat)}
                 aria-pressed={isSelected}
-                className={`relative -mb-3 shrink-0 whitespace-nowrap pb-3 text-[0.9375rem] font-medium transition-colors duration-200 ${
+                className={`relative shrink-0 whitespace-nowrap py-1 text-[0.9375rem] font-medium transition-colors duration-200 cursor-pointer ${
                   isSelected ? 'text-ink-strong' : 'text-ink-muted hover:text-ink-strong'
                 }`}
               >
                 {cat}
                 <span className="ml-1.5 text-meta text-ink-faint">{count}</span>
                 <span
-                  className={`absolute inset-x-0 bottom-0 h-px transition-colors duration-200 ${
+                  className={`absolute inset-x-0 -bottom-[0.875rem] h-[2px] transition-colors duration-200 ${
                     isSelected ? 'bg-accent' : 'bg-transparent'
                   }`}
                 />
