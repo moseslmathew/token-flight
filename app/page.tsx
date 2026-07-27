@@ -29,6 +29,25 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
     return '';
   }, [slug]);
 
+  const handleShareClick = useCallback(async () => {
+    const url = getShareUrl();
+    // Launch device native share sheet directly on mobile phones like native apps
+    if (typeof navigator !== 'undefined' && navigator.share) {
+      try {
+        await navigator.share({
+          title,
+          text,
+          url,
+        });
+        return;
+      } catch (err: unknown) {
+        if (err instanceof Error && err.name === 'AbortError') return;
+      }
+    }
+    // Fallback for desktop or non-native share browsers
+    setShowMenu((v) => !v);
+  }, [title, text, getShareUrl]);
+
   const handleCopyLink = useCallback(async () => {
     const url = getShareUrl();
     try {
@@ -36,7 +55,6 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback for older browsers
       const input = document.createElement('input');
       input.value = url;
       document.body.appendChild(input);
@@ -46,20 +64,7 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }
-    setTimeout(() => setShowMenu(false), 1500);
   }, [getShareUrl]);
-
-  const handleNativeShare = useCallback(async () => {
-    const url = getShareUrl();
-    if (navigator.share) {
-      try {
-        await navigator.share({ title, text, url });
-      } catch {
-        // User cancelled
-      }
-      setShowMenu(false);
-    }
-  }, [title, text, getShareUrl]);
 
   const shareToTwitter = useCallback(() => {
     const url = getShareUrl();
@@ -91,13 +96,13 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
   }, [title, text, getShareUrl]);
 
   return (
-    <div className="relative">
+    <div className="relative inline-block">
       <button
-        onClick={() => setShowMenu((v) => !v)}
-        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 font-semibold text-xs transition-all duration-200 border border-slate-200 shadow-2xs hover:shadow-xs cursor-pointer"
+        onClick={handleShareClick}
+        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-50 hover:bg-slate-100 text-slate-600 hover:text-slate-900 font-semibold text-xs transition-all duration-200 border border-slate-200 shadow-2xs hover:shadow-xs cursor-pointer active:scale-95"
         aria-label={`Share ${title}`}
       >
-        <Share2 className="w-3.5 h-3.5" />
+        <Share2 className="w-3.5 h-3.5 text-indigo-600" />
         <span>Share</span>
       </button>
 
@@ -105,60 +110,105 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
         <>
           {/* Backdrop */}
           <div
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 z-40 bg-slate-900/30 sm:bg-transparent backdrop-blur-[1px] sm:backdrop-blur-none transition-opacity"
             onClick={() => setShowMenu(false)}
           />
-          {/* Dropdown */}
-          <div className="absolute right-0 bottom-full mb-2 z-50 w-52 rounded-xl bg-white border border-slate-200 shadow-lg animate-share-menu-in overflow-hidden">
+
+          {/* Desktop Dropdown Popover (sm and above) */}
+          <div className="hidden sm:block absolute right-0 bottom-full mb-2 z-50 w-56 rounded-xl bg-white border border-slate-200 shadow-xl animate-share-menu-in overflow-hidden">
             <div className="p-1.5 space-y-0.5">
-              {typeof navigator !== 'undefined' && 'share' in navigator && (
-                <button
-                  onClick={handleNativeShare}
-                  className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors cursor-pointer"
-                >
-                  <Share2 className="w-3.5 h-3.5" />
-                  Share via…
-                </button>
-              )}
               <button
                 onClick={handleCopyLink}
-                className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors cursor-pointer"
               >
-                {copied ? (
-                  <>
-                    <Check className="w-3.5 h-3.5 text-emerald-600" />
-                    <span className="text-emerald-700">Link Copied!</span>
-                  </>
-                ) : (
-                  <>
-                    <Link2 className="w-3.5 h-3.5" />
-                    Copy Link
-                  </>
-                )}
+                <div className="flex items-center gap-2.5">
+                  <Link2 className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Copy Link</span>
+                </div>
+                {copied && <Check className="w-3.5 h-3.5 text-emerald-600" />}
               </button>
               <div className="border-t border-slate-100 my-0.5" />
               <button
                 onClick={shareToTwitter}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-sky-50 hover:text-sky-700 transition-colors cursor-pointer"
               >
-                <Twitter className="w-3.5 h-3.5" />
-                Share on X / Twitter
+                <Twitter className="w-3.5 h-3.5 text-sky-500" />
+                <span>Share on X / Twitter</span>
               </button>
               <button
                 onClick={shareToLinkedIn}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-700 transition-colors cursor-pointer"
               >
-                <Linkedin className="w-3.5 h-3.5" />
-                Share on LinkedIn
+                <Linkedin className="w-3.5 h-3.5 text-blue-600" />
+                <span>Share on LinkedIn</span>
               </button>
               <button
                 onClick={shareViaEmail}
                 className="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-slate-700 hover:bg-amber-50 hover:text-amber-700 transition-colors cursor-pointer"
               >
-                <Mail className="w-3.5 h-3.5" />
-                Share via Email
+                <Mail className="w-3.5 h-3.5 text-amber-500" />
+                <span>Share via Email</span>
               </button>
             </div>
+          </div>
+
+          {/* Mobile Native-Style Bottom Sheet (sm:hidden) */}
+          <div className="sm:hidden fixed inset-x-0 bottom-0 z-50 rounded-t-3xl bg-white border-t border-slate-200/90 p-5 shadow-2xl animate-slide-up space-y-4">
+            <div className="w-10 h-1 bg-slate-300 rounded-full mx-auto" />
+
+            <div className="space-y-1 text-center">
+              <h3 className="text-sm font-bold text-slate-900">Share Report</h3>
+              <p className="text-xs text-slate-500 line-clamp-1">{title}</p>
+            </div>
+
+            <div className="grid grid-cols-4 gap-3 pt-2 pb-1">
+              <button
+                onClick={handleCopyLink}
+                className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
+              >
+                <div className="w-11 h-11 rounded-full bg-slate-100 flex items-center justify-center text-slate-700">
+                  {copied ? <Check className="w-5 h-5 text-emerald-600" /> : <Link2 className="w-5 h-5" />}
+                </div>
+                <span className="text-[11px] font-medium text-slate-600">{copied ? 'Copied!' : 'Copy Link'}</span>
+              </button>
+
+              <button
+                onClick={shareToTwitter}
+                className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
+              >
+                <div className="w-11 h-11 rounded-full bg-sky-50 flex items-center justify-center text-sky-600">
+                  <Twitter className="w-5 h-5" />
+                </div>
+                <span className="text-[11px] font-medium text-slate-600">X / Twitter</span>
+              </button>
+
+              <button
+                onClick={shareToLinkedIn}
+                className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
+              >
+                <div className="w-11 h-11 rounded-full bg-blue-50 flex items-center justify-center text-blue-600">
+                  <Linkedin className="w-5 h-5" />
+                </div>
+                <span className="text-[11px] font-medium text-slate-600">LinkedIn</span>
+              </button>
+
+              <button
+                onClick={shareViaEmail}
+                className="flex flex-col items-center gap-1.5 p-2 rounded-xl hover:bg-slate-50 transition-colors cursor-pointer"
+              >
+                <div className="w-11 h-11 rounded-full bg-amber-50 flex items-center justify-center text-amber-600">
+                  <Mail className="w-5 h-5" />
+                </div>
+                <span className="text-[11px] font-medium text-slate-600">Email</span>
+              </button>
+            </div>
+
+            <button
+              onClick={() => setShowMenu(false)}
+              className="w-full py-3 rounded-xl bg-slate-100 text-slate-700 font-semibold text-xs transition-colors hover:bg-slate-200 cursor-pointer"
+            >
+              Cancel
+            </button>
           </div>
         </>
       )}
