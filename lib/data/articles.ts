@@ -92,29 +92,63 @@ def merge(ids, pair, idx):
     id: '2',
     slug: 'how-ai-turns-words-into-numbers-embeddings',
     title: 'How AI Turns Words Into Numbers: Vector Embeddings Explained',
-    excerpt: 'Discover how dense vector embeddings map words and concepts into high-dimensional geometric space where similarity equals distance.',
+    excerpt: 'Follow one word — "cat" — all the way from a sentence you typed to a point in meaning-space, through tokenization, the vocabulary, the lookup table, and 768 learned numbers.',
     category: 'LLMs',
     difficulty: 'Beginner',
-    readTime: '4 min read',
+    readTime: '8 min read',
     publishedAt: 'July 2026',
     author: {
       name: 'AI Engineering Team',
       role: 'Research & Technical Writing',
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
     },
-    tags: ['Embeddings', 'Vector Space', 'Cosine Similarity', 'NLP'],
+    tags: ['Embeddings', 'Vector Space', 'Tokenization', 'Cosine Similarity', 'NLP'],
     featured: false,
     content: {
-      intro: 'Token IDs are integers, but integers carry no semantic meaning. Vector embeddings solve this by transforming tokens into dense vectors in 1,536+ dimensions.',
+      intro: 'A language model cannot read. Not in the way you are reading this. Before it can do anything at all with your sentence, every word has to be turned into numbers — and that conversion happens before the model proper even gets involved. This is the story of one word, "cat", travelling from a sentence you typed to a point in a space of meaning.',
       sections: [
         {
-          heading: '1. Geometric Semantic Relationships',
-          body: 'In an embedding space, words with similar meanings (e.g. "king" and "queen", or "cat" and "kitten") are positioned close to each other. Vector arithmetic like King - Man + Woman = Queen actually holds true geometrically.',
-          keyTakeaway: 'Embeddings capture semantic nuance by placing related concepts near each other in multi-dimensional space.',
+          heading: '1. The Big Picture: This Happens Before the Model',
+          body: 'People usually picture a language model as one enormous thing that takes in words and gives back words. That is not quite the shape of it.\n\nThere are really three stations. Your text arrives as text. It passes through an embedding layer, which converts it into numbers. Only then does it reach the model — the part that does the actual reasoning.\n\nThe important consequence: by the time the model is thinking about your sentence, there are no words left in it. There is only a long list of numbers. Everything the model will ever do with "cat" depends on the numbers that layer handed over.',
+          visual: 'emb-pipeline',
+          keyTakeaway: 'Embedding is not part of the model’s reasoning. It is the doorway that turns language into something the reasoning can run on.',
         },
         {
-          heading: '2. Measuring Similarity with Cosine Distance',
-          body: 'Cosine similarity measures the angle between two vectors regardless of magnitude. A cosine score of 1.0 means identical directional meaning.',
+          heading: '2. It Starts With a Sentence',
+          body: 'Take a short one: "The cat sat quietly."\n\nThe first thing that happens is that the sentence is chopped into pieces called tokens. Tokens are not quite words. Sometimes a token is a whole word, sometimes it is a fragment, and punctuation counts too — the full stop at the end is its own token.\n\nWatch what happens to "quietly". It does not survive as one piece. It gets split into "quiet" and "ly", because "quietly" is not one of the pieces the model keeps on file, but both of those fragments are.\n\nThis is why models cope with words they have never seen. They are not looking words up whole; they are rebuilding them from a fixed set of parts.',
+          visual: 'emb-tokenize',
+        },
+        {
+          heading: '3. Where Those Numbers Come From',
+          body: 'Each token comes out of that step with a number attached. "cat" gets 2543. Where does 2543 come from?\n\nFrom the vocabulary — a single numbered list of every token the model knows. In this example the list runs to 50,257 entries. It is decided before training begins and never changes afterwards.\n\nAnd that is the whole story of the ID. It is not a measurement, a score, or a category. A token’s ID is simply its position in the list. "cat" is entry number 2543, the way a word is on a particular page of a dictionary. The number says nothing whatsoever about what a cat is.',
+          visual: 'emb-vocabulary',
+          keyTakeaway: 'A token ID carries no meaning. It is an address, not a description — 2543 is just where "cat" sits on the shelf.',
+        },
+        {
+          heading: '4. The Lookup: One Row for Every Token',
+          body: 'So if the ID means nothing, where does the meaning come from?\n\nFrom a very large table called the embedding matrix. It has one row for every single token in the vocabulary — 50,257 rows in our example. Each row is a list of numbers belonging to that one token.\n\nThe embedding layer does something almost disappointingly simple with it. It takes the ID, goes to that row, and lifts the row out. No arithmetic, no reasoning. It is a lookup, in the most literal sense — the same operation as finding page 2543.\n\nThe row it hands back is the embedding. That list of numbers is what the model will actually think with.',
+          visual: 'emb-lookup',
+        },
+        {
+          heading: '5. Nobody Writes These Numbers by Hand',
+          body: 'It is worth pausing on where the values in that row came from, because the answer surprises people.\n\nNobody chose them. No linguist sat down and decided that position four of "cat" should be 1.07. When the model is first created, the entire embedding matrix is filled with random noise — every word is meaningless, and every word is meaningless in a different way.\n\nThe numbers are learned. As the model reads its way through an enormous amount of text, it repeatedly tries to predict what comes next, gets it wrong, and nudges the numbers slightly. Every nudge is tiny. There are billions of them.\n\nWhat emerges at the end is not a definition of "cat" that a human wrote. It is a summary of how the word "cat" behaves — which words it appears beside, which it never appears beside, which sentences it turns up in.',
+          keyTakeaway: 'The embedding of a word is not a definition. It is a compressed record of the company that word keeps.',
+        },
+        {
+          heading: '6. What “768 Dimensions” Actually Means',
+          body: 'You will constantly see embeddings described as being "768-dimensional" or "1,536-dimensional", and it sounds like it should be difficult. It is not.\n\nEach value in the row sits at a fixed position, and those positions are the dimensions. "768 dimensions" simply means the row is 768 numbers long. That is the entire idea.\n\nHow long the row is depends on the model. Our example uses 768. GPT-3 used 12,288. Bigger rows give the model more room to record fine distinctions, and cost more memory and compute for every token processed.\n\nOne thing that is not true, however tempting it is: the individual positions do not have human meanings. Position 12 is not "how animal-like this is". Nobody ever asked the model to make any single slot interpretable, and it didn’t.',
+          visual: 'emb-dimensions',
+        },
+        {
+          heading: '7. The Fingerprint: No Single Number Means “Cat”',
+          body: 'If no individual position means anything, then where exactly does the meaning live?\n\nIn the pattern. Meaning is spread across the entire vector, the way a fingerprint is not located in any one ridge. You cannot point at one value and say "that is the cat part".\n\nYou can test this. Change a single number, even substantially, and the vector is still recognisably "cat" — it still lands in the same neighbourhood as before. Disturb the whole pattern by the same total amount, and it stops being "cat" at all. It becomes something else, or nothing.\n\nThat is what people mean when they call an embedding a fingerprint for a word.',
+          visual: 'emb-fingerprint',
+          keyTakeaway: 'No single number defines a word. Change the pattern enough and it stops being that word — which is exactly what makes the whole vector the unit of meaning.',
+        },
+        {
+          heading: '8. Meaning as Geometry',
+          body: 'Here is the part that makes all of it worthwhile.\n\nWords that get used in similar ways end up being nudged in similar directions during training. Similar patterns mean the vectors end up close together. So the space fills up with structure that nobody designed.\n\n"Cat" and "kitten" land near each other. So do "dog", "puppy" and "tiger". Meanwhile "car" and "truck" are somewhere else entirely, and "piano" and "violin" are off in their own corner. No human sorted them. They arranged themselves, purely from the company they kept in the training text.\n\nOnce meaning is geometry, similarity becomes measurable. You can ask how close two words are with straightforward arithmetic — usually cosine similarity, which compares the direction two vectors point in and ignores how long they are.',
+          visual: 'emb-space',
           codeSnippet: {
             language: 'python',
             code: `import numpy as np
@@ -123,11 +157,21 @@ def cosine_similarity(vec1, vec2):
     dot_product = np.dot(vec1, vec2)
     norm_vec1 = np.linalg.norm(vec1)
     norm_vec2 = np.linalg.norm(vec2)
-    return dot_product / (norm_vec1 * norm_vec2)`,
+    return dot_product / (norm_vec1 * norm_vec2)
+
+# 1.0 = same direction, 0 = unrelated, -1 = opposite
+cosine_similarity(cat_vector, kitten_vector)   # ~0.87
+cosine_similarity(cat_vector, piano_vector)    # ~0.11`,
           },
+          keyTakeaway: 'Similar meaning becomes nearby vectors. That single property is what makes search, recommendation, clustering and retrieval-augmented generation possible.',
+        },
+        {
+          heading: '9. The Whole Chain, End to End',
+          body: 'Five steps, and only the first two involve anything you would recognise as language.\n\nA word becomes a token. The token becomes an ID — its position in a fixed list. The ID becomes a row lifted out of a learned table. That row is a vector of a few hundred numbers. And that vector is a point in a space where distance means similarity.\n\nThat is a word embedding. Everything else a language model does is built on top of it.',
+          visual: 'emb-recap',
         },
       ],
-      summary: 'Embeddings are the fundamental language of neural networks, bridging discrete text and continuous mathematical spaces.',
+      summary: 'An embedding is the bridge between language and mathematics. A token ID is only an address; the meaning lives in a learned row of numbers, spread across the whole pattern rather than any single value. Because words used in similar ways end up with similar patterns, the resulting space has a geometry where distance means similarity — and that one property underpins semantic search, recommendation, clustering, and RAG.',
     },
   },
   {

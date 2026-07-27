@@ -1,117 +1,16 @@
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { Play, Pause, RotateCcw, Sparkles, ChevronRight } from 'lucide-react';
-
-/* ────────────────────────────────────────────────────────────
-   Shared hooks & chrome
-   ──────────────────────────────────────────────────────────── */
-
-function useReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const sync = () => setReduced(mq.matches);
-    sync();
-    mq.addEventListener('change', sync);
-    return () => mq.removeEventListener('change', sync);
-  }, []);
-  return reduced;
-}
-
-function useInView<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [inView, setInView] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setInView(true);
-          obs.disconnect();
-        }
-      },
-      { rootMargin: '0px 0px -60px 0px', threshold: 0 },
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return [ref, inView] as const;
-}
-
-function useTicker(playing: boolean, interval: number) {
-  const [tick, setTick] = useState(0);
-  useEffect(() => {
-    if (!playing) return;
-    const id = setInterval(() => setTick((t) => t + 1), interval);
-    return () => clearInterval(id);
-  }, [playing, interval]);
-  return tick;
-}
-
-function VisualFrame({
-  label,
-  action,
-  caption,
-  children,
-}: {
-  label: string;
-  action?: React.ReactNode;
-  caption?: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <figure className="overflow-hidden rounded-2xl border border-rule bg-surface">
-      <figcaption className="flex items-center justify-between gap-3 border-b border-rule-soft bg-paper-deep/50 px-4 py-3 sm:px-5">
-        <span className="eyebrow flex min-w-0 items-center gap-2 text-ember">
-          <Sparkles className="h-3.5 w-3.5 shrink-0" />
-          <span className="truncate">{label}</span>
-        </span>
-        {action}
-      </figcaption>
-      <div className="p-4 sm:p-6">{children}</div>
-      {caption && (
-        <p className="-mt-1 px-4 pb-5 font-serif text-[0.9375rem] leading-relaxed text-ink-muted sm:px-6">
-          {caption}
-        </p>
-      )}
-    </figure>
-  );
-}
-
-function PlayButton({ playing, onClick }: { playing: boolean; onClick: () => void }) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-surface border border-rule text-[11px] font-semibold text-ink-muted hover:text-accent hover:border-accent/45 transition-colors shrink-0"
-    >
-      {playing ? <Pause className="w-3 h-3" /> : <Play className="w-3 h-3" />}
-      {playing ? 'Pause' : 'Play'}
-    </button>
-  );
-}
-
-/* Vertical animated connector between stages */
-function Connector({ active }: { active: boolean }) {
-  return (
-    <div className="flex justify-center py-1">
-      <svg width="4" height="24" viewBox="0 0 4 24" aria-hidden="true">
-        <line
-          x1="2"
-          y1="0"
-          x2="2"
-          y2="24"
-          strokeWidth="2"
-          strokeLinecap="round"
-          stroke={active ? '#4c449b' : '#e6ded1'}
-          className={active ? 'moe-flow' : ''}
-          style={{ transition: 'stroke 0.4s ease' }}
-        />
-      </svg>
-    </div>
-  );
-}
+import React, { useEffect, useMemo, useState } from 'react';
+import { RotateCcw, ChevronRight } from 'lucide-react';
+import {
+  VisualFrame,
+  PlayButton,
+  Connector,
+  useReducedMotion,
+  useInView,
+  useTicker,
+} from './visuals/primitives';
+import { EMBEDDING_VISUALS } from './visuals/embeddings';
 
 /* ────────────────────────────────────────────────────────────
    1. Dense vs. Sparse — how much of the model wakes up
@@ -876,6 +775,7 @@ function MemoryVsCompute() {
    ──────────────────────────────────────────────────────────── */
 
 const VISUALS: Record<string, React.ComponentType> = {
+  ...EMBEDDING_VISUALS,
   'moe-dense-vs-sparse': DenseVsSparse,
   'moe-router': RouterFlow,
   'moe-topk': TopKGrid,
