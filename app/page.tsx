@@ -230,6 +230,11 @@ export default function LatestAINewsPage() {
     'Industry & Policy',
   ];
 
+  const activeCategories = categories.filter((cat) => {
+    if (cat === 'All') return true;
+    return AI_NEWS_ITEMS.some((n) => n.category === cat);
+  });
+
   const filteredNews =
     selectedCategory && selectedCategory !== 'All'
       ? AI_NEWS_ITEMS.filter((item) => item.category === selectedCategory)
@@ -257,7 +262,7 @@ export default function LatestAINewsPage() {
       {/* Category filter */}
       <div className="mt-12 flex items-center justify-between gap-6 border-b border-rule">
         <div className="no-scrollbar filter-rail flex min-w-0 w-full items-center gap-6 overflow-x-auto py-3.5 pr-10 sm:gap-7 lg:pr-0">
-          {categories.map((cat) => {
+          {activeCategories.map((cat) => {
             const isSelected = cat === 'All' ? isAllSelected : selectedCategory === cat;
             const count =
               cat === 'All'

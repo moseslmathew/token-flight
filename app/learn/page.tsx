@@ -11,6 +11,10 @@ export default function LearnPage() {
 
   const filteredArticles = ARTICLES.filter((a) => a.category === selectedCategory);
 
+  const activeCategories = CATEGORIES.filter((cat) =>
+    ARTICLES.some((a) => a.category === cat)
+  );
+
   return (
     <div className="measure-wide px-4 pb-8 pt-14 sm:px-6 sm:pt-20">
       {/* Masthead */}
@@ -28,7 +32,7 @@ export default function LearnPage() {
       {/* Category filter */}
       <div className="mt-12 flex items-center justify-between gap-6 border-b border-rule">
         <div className="no-scrollbar filter-rail flex min-w-0 w-full items-center gap-7 overflow-x-auto py-3.5 pr-10">
-          {CATEGORIES.map((cat) => {
+          {activeCategories.map((cat) => {
             const isSelected = selectedCategory === cat;
             const count = ARTICLES.filter((a) => a.category === cat).length;
             return (
