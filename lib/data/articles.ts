@@ -36,10 +36,10 @@ export const ARTICLES: Article[] = [
     id: '1',
     slug: 'how-an-llm-gets-its-vocabulary-bpe-from-scratch',
     title: 'How an LLM Gets Its Vocabulary — BPE from Scratch',
-    excerpt: 'A visual, step-by-step breakdown of how Large Language Models use Byte Pair Encoding (BPE) to build vocabulary and tokenize text.',
+    excerpt: 'Build a tokenizer by hand from a single sentence: split into characters, count adjacent pairs, merge the most frequent, repeat. By the end you will know exactly why "main" is two tokens and the typo "teh" is three.',
     category: 'LLMs',
     difficulty: 'Intermediate',
-    readTime: '7 min read',
+    readTime: '9 min read',
     publishedAt: 'July 2026',
     author: {
       name: 'AI Engineering Team',
@@ -49,43 +49,66 @@ export const ARTICLES: Article[] = [
     tags: ['BPE', 'Tokenization', 'LLMs', 'Python', 'tiktoken'],
     featured: true,
     content: {
-      intro: 'Before an LLM like GPT-4 or Claude can process a prompt, text must be converted into numerical tokens. Byte Pair Encoding (BPE) is the industry standard subword tokenization algorithm that creates this vocabulary.',
+      intro: 'Take the word "unbelievable". A language model does not see letters, and it does not see the whole word either. It sees three pieces — un, believe, able. Those pieces are called tokens, and no human chose them. They were learned by an algorithm called Byte Pair Encoding, which you can follow all the way through by hand.',
       sections: [
         {
-          heading: '1. Build Time vs. Runtime Tokenization',
-          body: 'Tokenization has two distinct phases:\n\n- Build Time: The model scans massive corpora of text, counts adjacent character pairs, and iteratively merges the most frequent pairs to build a fixed vocabulary rule-set.\n- Runtime: When you type a prompt, those pre-computed rules convert your raw text string into token IDs in milliseconds.',
-          keyTakeaway: 'Build time creates the frozen token vocabulary rules; runtime applies them to incoming text.',
+          heading: '1. An Algorithm With a Surprising Past',
+          body: 'Byte Pair Encoding was not invented for language at all.\n\nIn 1994 Philip Gage published it as a file compression trick: find the most common pair of bytes, replace it with a single unused byte, and repeat. That was the entire idea.\n\nIn 2016, machine translation researchers borrowed it for a completely different problem — rare words. If you can break unfamiliar words into familiar fragments, your model never has to admit it has never seen something. In 2019 OpenAI trained GPT-2 with it, and today it is the standard behind GPT-4, Llama, and most models you use.',
+          visual: 'bpe-history',
         },
         {
-          heading: '2. The BPE Merge Algorithm Step-by-Step',
-          body: 'BPE starts with individual characters as base tokens. It iteratively finds the most frequent pair of adjacent tokens and creates a new merged token until reaching the target vocabulary size (e.g. 100,000 tokens in GPT-4).',
+          heading: '2. The Setup: One Sentence',
+          body: 'To watch the algorithm work, the training data needs to be small enough to follow by eye. So: one sentence.\n\n"The train came in the rain again."\n\nThe first thing BPE does is split that into words and count each one. "The" appears twice; everything else appears once.\n\nThat is genuinely all it needs — a table of words and how often they occur. Real tokenizers do exactly this, just over billions of sentences instead of one.',
+        },
+        {
+          heading: '3. Split, Count, Merge — the Whole Loop',
+          body: 'From here the algorithm does the same three things over and over.\n\nStep one: split every word into individual characters. Each distinct character becomes a starting entry in the vocabulary — ten of them for our sentence.\n\nStep two: count every pair of neighbouring characters, weighted by how often the word appears. In our sentence, i followed by n wins with a count of four: it turns up in train, in, rain and again.\n\nStep three: the winner gets merged. Every i next to n fuses into a single new token, in — in all four words at once. That merge is saved as rule number one, and the vocabulary grows to eleven.\n\nStep four is simply: repeat.',
+          visual: 'bpe-train',
+          keyTakeaway: 'Split, count, merge, repeat. Everything else about tokenization is detail on top of these three moves.',
+        },
+        {
+          heading: '4. What You End Up With',
+          body: 'After four rounds the vocabulary contains fourteen tokens: the ten characters it started with, plus the four merges it learned — in, ain, th, and the.\n\nNotice the last one. Nobody told the algorithm that "the" is an English word. It merged t with h because that pair was frequent, then merged th with e for the same reason. A whole word fell out of pure frequency counting.\n\nThe rules matter as much as the tokens. The vocabulary tells you which pieces exist; the ordered list of merges tells you how to rebuild any word from them. Big models run this identical loop, just until the vocabulary reaches about 100,000 entries.',
+        },
+        {
+          heading: '5. A Word It Has Never Seen',
+          body: 'Here is the test that matters. Take "main" — a word that appears nowhere in our training sentence.\n\nSplit it into characters: m, a, i, n. Now apply the learned rules in the order they were learned. Rule one, i + n, matches — we get m, a, in. Rule two, a + in, matches — we get m, ain. Rules three and four find nothing.\n\n"main" is two tokens, both of which the vocabulary already knows, from a word the algorithm never saw during training.\n\nNow try the typo. "the" is a single token, but "teh" matches no rule at all — there is no t beside an h — so it falls back to three separate characters: t, e, h. It still works. That is the safety net: because every character is in the vocabulary, nothing is ever out-of-vocabulary, and tokenization never fails.',
+          visual: 'bpe-encode',
+          keyTakeaway: 'Common words collapse to one token; unfamiliar ones decompose into pieces; broken ones fall all the way back to characters. Nothing is ever unknown.',
+        },
+        {
+          heading: '6. From Tokens to Numbers',
+          body: 'The model still cannot use "m" and "ain" — it needs numbers.\n\nThis is where the vocabulary does its second job. It is also a lookup table: every token sits at a position, and that position is its ID. In our fourteen-token vocabulary, m is token 6 and ain is token 11. So "main" becomes the pair 6, 11.\n\nText in, numbers out. From this point on, the model only ever sees the numbers.\n\nGPT-4 does exactly this, with a table that scrolls on for 100,000 entries. Same idea, same lookup — just a much longer list.',
+        },
+        {
+          heading: '7. Build Time and Run Time',
+          body: 'It helps to see the whole thing as two halves that happen at completely different moments.\n\nThe top half — build time — happened once, at OpenAI. Billions of pages of text, count, merge, repeat about 100,000 times. The finished vocabulary and its merge rules were then frozen and shipped inside a library.\n\nThe bottom half — run time — happens on your machine, every single time you type. Your text runs through those saved rules, becomes tokens, flips into IDs, and heads for the model.\n\nTrained once. Used on every prompt. Nothing is being learned while you type; the rules were settled long ago.',
+          visual: 'bpe-pipeline',
+          keyTakeaway: 'Build time creates the frozen vocabulary and merge rules; run time only applies them. That is why tokenizing a prompt takes microseconds.',
+        },
+        {
+          heading: '8. Three Lines of Python',
+          body: 'In production this ships as tiktoken — open source, written in Rust, released by OpenAI, and the tokenizer behind GPT-4. Its 100,000-token vocabulary was built exactly the way you just watched, only on massive amounts of web text.\n\nUsing it takes three lines.\n\nTwo details are worth noticing in the output. Even the word "tiktoken" gets split into pieces the vocabulary already knows — t, ik, token. And the spaces are not separate tokens; they live inside the tokens themselves, which is how decoding glues the sentence back together perfectly.',
           codeSnippet: {
             language: 'python',
-            code: `def get_stats(ids):
-    counts = {}
-    for pair in zip(ids, ids[1:]):
-        counts[pair] = counts.get(pair, 0) + 1
-    return counts
+            code: `import tiktoken
 
-def merge(ids, pair, idx):
-    newids = []
-    i = 0
-    while i < len(ids):
-        if i < len(ids) - 1 and ids[i] == pair[0] and ids[i+1] == pair[1]:
-            newids.append(idx)
-            i += 2
-        else:
-            newids.append(ids[i])
-            i += 1
-    return newids`,
+enc = tiktoken.encoding_for_model("gpt-4")
+
+ids = enc.encode("tiktoken is great")
+enc.decode(ids)                      # 'tiktoken is great' — exactly what went in
+
+# Look at the pieces themselves, spaces and all
+[enc.decode([i]) for i in ids]
+# ['t', 'ik', 'token', ' is', ' great']`,
           },
         },
         {
-          heading: '3. Handling Typos and Subword Efficiency',
-          body: 'Because BPE falls back to raw bytes or individual characters for unseen words, typos like "teh" or rare technical terms can still be represented without throwing out-of-vocabulary errors.',
+          heading: '9. The Whole Story',
+          body: 'From one sentence to GPT-4, it is the same three moves repeated: split, count, merge.\n\nSplit the text into the smallest pieces you have. Count which pieces sit next to each other most often. Merge the winner into a new piece, and write down the rule. Do it again, a hundred thousand times.\n\nWhat comes out is a vocabulary that can spell anything — real words, invented words, typos, code, other languages — without ever encountering something it has no representation for.',
         },
       ],
-      summary: 'Byte Pair Encoding balances vocabulary size and sequence length. Implementing BPE from scratch demystifies how models see words as numbers.',
+      summary: 'Byte Pair Encoding builds a vocabulary by repeatedly merging the most frequent adjacent pair. The result is a set of subword tokens plus an ordered list of merge rules that can reconstruct any string. Common words become single tokens, unfamiliar words decompose into known fragments, and anything else falls back to characters — so a tokenizer never fails and nothing is ever out-of-vocabulary.',
     },
   },
   {

@@ -98,6 +98,12 @@ export function useClock(playing: boolean, resetKey: number = 0) {
   return t;
 }
 
+/** Palette carried over from the source animations, shared by the explainers. */
+export const CORAL = '#d97757';
+export const CORAL_DEEP = '#bc5b3b';
+export const SLATE = '#6b89a7';
+export const PLATE = '#2a2823';
+
 export const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 export const easeInOutCubic = (p: number) =>
