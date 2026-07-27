@@ -35,7 +35,7 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
 
       <article className="measure-wide px-4 pt-10 sm:px-6 sm:pt-14">
         {/* Back */}
-        <div className="measure">
+        <div>
           <Link
             href="/learn"
             className="inline-flex items-center gap-2 text-meta font-medium text-ink-muted transition-colors hover:text-accent"
@@ -46,7 +46,7 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
         </div>
 
         {/* Title block */}
-        <header className="measure animate-rise-in mt-10 space-y-5">
+        <header className="animate-rise-in mt-10 max-w-4xl space-y-5">
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <span className="eyebrow text-accent">{article.category}</span>
             <span className="text-ink-faint">·</span>
@@ -67,26 +67,26 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
         </header>
 
         {/* Lead */}
-        <div className="measure mt-12">
+        <div className="mt-12 max-w-3xl">
           <p className="text-lede text-ink-strong">{article.content.intro}</p>
         </div>
 
         {/* Sections */}
         {article.content.sections.map((sec, idx) => (
           <section key={idx} className="mt-16">
-            <div className="measure space-y-5">
+            <div className="max-w-3xl space-y-5">
               <h2 className="text-h2 font-semibold text-ink-strong">{sec.heading}</h2>
               <p className="whitespace-pre-line text-body text-ink">{sec.body}</p>
             </div>
 
             {sec.visual && (
-              <div className="measure-wide mt-10">
+              <div className="mt-10 max-w-5xl">
                 <ArticleVisual id={sec.visual} />
               </div>
             )}
 
             {sec.codeSnippet && (
-              <figure className="measure-wide mt-10 overflow-hidden rounded-xl bg-code-bg">
+              <figure className="mt-10 max-w-5xl overflow-hidden rounded-xl bg-code-bg">
                 <figcaption className="flex items-center justify-between border-b border-white/8 px-5 py-2.5">
                   <span className="eyebrow text-code-faint">{sec.codeSnippet.language}</span>
                 </figcaption>
@@ -97,7 +97,7 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
             )}
 
             {sec.keyTakeaway && (
-              <aside className="measure mt-10 border-l-2 border-accent pl-5 sm:pl-6">
+              <aside className="mt-10 max-w-3xl border-l-2 border-accent pl-5 sm:pl-6">
                 <span className="eyebrow block text-accent">Key takeaway</span>
                 <p className="mt-2 text-[1.0625rem] leading-relaxed text-ink">
                   {sec.keyTakeaway}
@@ -108,7 +108,7 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
         ))}
 
         {/* Closing summary */}
-        <div className="measure mt-20 border-t border-rule pt-10">
+        <div className="mt-20 max-w-4xl border-t border-rule pt-10">
           <span className="eyebrow block text-ink-faint">In summary</span>
           <p className="mt-3 text-lede text-ink-strong">{article.content.summary}</p>
         </div>
