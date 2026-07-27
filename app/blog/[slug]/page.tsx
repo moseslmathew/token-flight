@@ -33,7 +33,7 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
     <>
       <ReadingProgress />
 
-      <article className="measure-wide px-4 pt-10 sm:px-6 sm:pt-14">
+      <article className="measure-wide px-4 pt-6 sm:px-6 sm:pt-8">
         {/* Back */}
         <div className="measure">
           <Link
