@@ -20,7 +20,7 @@ export default function LearnPage() {
       <div className="measure-wide px-4 pt-8 sm:px-6 sm:pt-12">
         {/* Masthead */}
         <header className="animate-rise-in space-y-4 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200/80 px-3.5 py-1 text-xs font-semibold text-blue-700 shadow-xs">
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 text-xs font-semibold text-emerald-800 shadow-xs">
             First-Principles Engineering Guides
           </div>
           <h1 className="text-display font-extrabold tracking-tight text-ink-strong">

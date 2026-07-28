@@ -204,8 +204,8 @@ function Analysis({ item, dense = false }: { item: AINewsItem; dense?: boolean }
     {
       label: 'Why it matters',
       body: item.content.whyItMatters,
-      containerStyle: 'bg-blue-50/70 border-blue-200/70 text-blue-950',
-      labelStyle: 'text-blue-600',
+      containerStyle: 'bg-emerald-50/70 border-emerald-200/70 text-emerald-950',
+      labelStyle: 'text-emerald-700',
     },
     {
       label: 'Future impact',
@@ -272,8 +272,8 @@ export default function LatestAINewsPage() {
       <div className="measure-wide px-4 pt-8 sm:px-6 sm:pt-12">
         {/* Masthead */}
         <header className="animate-rise-in space-y-4 text-center max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 rounded-full bg-blue-50 border border-blue-200/80 px-3.5 py-1 text-xs font-semibold text-blue-700 shadow-xs">
-            <span className="h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
+          <div className="inline-flex items-center gap-2 rounded-full bg-emerald-50 border border-emerald-200/80 px-3.5 py-1 text-xs font-semibold text-emerald-800 shadow-xs">
+            <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
             AI Engineering & Model Intelligence
           </div>
           <h1 className="text-display font-extrabold tracking-tight text-ink-strong">
@@ -344,7 +344,7 @@ export default function LatestAINewsPage() {
                   {featuredNews.content.technicalHighlights.map((highlight, idx) => (
                     <span
                       key={idx}
-                      className="rounded-full bg-blue-50 text-blue-700 border border-blue-200/70 px-3 py-1 text-xs font-semibold"
+                      className="rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/70 px-3 py-1 text-xs font-semibold"
                     >
                       {highlight}
                     </span>

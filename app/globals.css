@@ -21,11 +21,11 @@
   --color-rule: #e2e8f0;
   --color-rule-soft: #f1f5f9;
 
-  /* ── Accent: Royal Electric Blue ─────────────────────── */
-  --color-accent: #2563eb;
-  --color-accent-deep: #1d4ed8;
-  --color-accent-soft: #eff6ff;
-  --color-accent-ring: #bfdbfe;
+  /* ── Accent: Premium Emerald ─────────────────────────── */
+  --color-accent: #059669;
+  --color-accent-deep: #047857;
+  --color-accent-soft: #ecfdf5;
+  --color-accent-ring: #a7f3d0;
 
   /* ── Data counter-colour and warning ──────────────────── */
   --color-cool: #2563eb;
@@ -161,7 +161,7 @@
 
   /* ── Ambient Header Glow ──────────────────────────────── */
   .ambient-glow {
-    background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.07) 0%, rgba(248, 250, 252, 0) 70%);
+    background: radial-gradient(circle at 50% 0%, rgba(5, 150, 105, 0.07) 0%, rgba(248, 250, 252, 0) 70%);
   }
 
   /* ── Horizontal filter rail: smooth mobile touch scrolling ─ */

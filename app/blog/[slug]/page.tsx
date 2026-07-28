@@ -49,7 +49,7 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
           {/* Title block */}
           <header className="measure animate-rise-in mt-8 space-y-5">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-md bg-blue-50 text-blue-700 border border-blue-200/60 px-2.5 py-0.5 text-[0.6875rem] font-bold uppercase tracking-wider">
+              <span className="rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2.5 py-0.5 text-[0.6875rem] font-bold uppercase tracking-wider">
                 {article.category}
               </span>
               <span className="rounded-md bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wider">
@@ -101,9 +101,9 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
               )}
 
               {sec.keyTakeaway && (
-                <aside className="measure mt-8 rounded-r-2xl border-l-4 border-accent bg-blue-50/70 p-5 sm:p-6 shadow-xs">
+                <aside className="measure mt-8 rounded-r-2xl border-l-4 border-accent bg-emerald-50/70 p-5 sm:p-6 shadow-xs">
                   <span className="eyebrow block text-accent font-bold mb-1">Key Takeaway</span>
-                  <p className="text-[1.0625rem] font-medium leading-relaxed text-blue-950">
+                  <p className="text-[1.0625rem] font-medium leading-relaxed text-emerald-950">
                     {sec.keyTakeaway}
                   </p>
                 </aside>
