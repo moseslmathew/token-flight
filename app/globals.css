@@ -11,19 +11,19 @@
   --color-paper-deep: #f1f5f9;
   --color-surface: #ffffff;
 
-  /* ── Ink — cool neutrals, tuned to clear 4.5:1 on white ─ */
+  /* ── Ink — high-end editorial slate scale ───────────── */
   --color-ink-strong: #0f172a;
   --color-ink: #334155;
   --color-ink-muted: #64748b;
   --color-ink-faint: #94a3b8;
 
-  /* ── Rules & edges ────────────────────────────────────── */
+  /* ── Rules & subtle borders ──────────────────────────── */
   --color-rule: #e2e8f0;
   --color-rule-soft: #f1f5f9;
 
-  /* ── Accent: Modern Tech Blue ─────────────────────────── */
-  --color-accent: #3b82f6;
-  --color-accent-deep: #2563eb;
+  /* ── Accent: Royal Electric Blue ─────────────────────── */
+  --color-accent: #2563eb;
+  --color-accent-deep: #1d4ed8;
   --color-accent-soft: #eff6ff;
   --color-accent-ring: #bfdbfe;
 
@@ -76,8 +76,8 @@
 
 @layer base {
   :root {
-    --measure: 44rem;
-    --measure-wide: 52rem;
+    --measure: 46rem;
+    --measure-wide: 64rem;
   }
 
   html {
@@ -148,13 +148,20 @@
   .paper-card {
     background-color: var(--color-surface);
     border: 1px solid var(--color-rule);
-    border-radius: 0.75rem;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 1rem;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
   }
 
   .paper-card:hover {
-    border-color: var(--color-accent-ring);
-    box-shadow: 0 8px 24px -16px rgba(4, 120, 87, 0.4);
+    border-color: #cbd5e1;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px -6px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
+  }
+
+  /* ── Ambient Header Glow ──────────────────────────────── */
+  .ambient-glow {
+    background: radial-gradient(circle at 50% 0%, rgba(37, 99, 235, 0.07) 0%, rgba(248, 250, 252, 0) 70%);
   }
 
   /* ── Horizontal filter rail: smooth mobile touch scrolling ─ */

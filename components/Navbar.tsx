@@ -28,23 +28,29 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-paper/90 backdrop-blur-md border-b border-rule shadow-sm'
-          : 'bg-paper/60 backdrop-blur-sm border-b border-transparent'
+          ? 'bg-surface/90 backdrop-blur-xl border-b border-rule shadow-sm'
+          : 'bg-paper/70 backdrop-blur-md border-b border-rule/50'
       }`}
     >
-      <div className="measure-wide flex h-14 items-center justify-between gap-6 px-4 sm:px-6">
-        {/* Wordmark */}
-        <Link href="/" className="group flex items-baseline gap-px shrink-0">
-          <span className="text-[1.25rem] font-bold tracking-tight text-ink-strong">
-            Token
+      <div className="measure-wide flex h-16 items-center justify-between gap-6 px-4 sm:px-6">
+        {/* Wordmark & Live Badge */}
+        <div className="flex items-center gap-3 shrink-0">
+          <Link href="/" className="group flex items-center gap-1.5 shrink-0">
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-white font-mono text-xs font-bold shadow-xs transition-transform duration-200 group-hover:scale-105">
+              TF
+            </span>
+            <span className="text-[1.25rem] font-bold tracking-tight text-ink-strong">
+              Token<span className="text-accent transition-colors duration-200 group-hover:text-accent-deep">Flight</span>
+            </span>
+          </Link>
+          <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-accent-soft border border-accent-ring/60 px-2.5 py-0.5 text-[0.6875rem] font-semibold text-accent-deep">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
+            AI Engineering
           </span>
-          <span className="text-[1.25rem] font-bold tracking-tight text-accent transition-colors duration-200 group-hover:text-accent-deep">
-            Flight
-          </span>
-        </Link>
+        </div>
 
         {/* Primary navigation */}
-        <nav className="flex items-center gap-1 sm:gap-2 rounded-full bg-paper-deep/80 p-1 border border-rule">
+        <nav className="flex items-center gap-1 rounded-full bg-paper-deep/90 p-1 border border-rule/80 shadow-xs">
           {NAV_LINKS.map((link) => {
             const active = link.match(pathname);
             return (
@@ -52,10 +58,10 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 aria-current={active ? 'page' : undefined}
-                className={`relative rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                className={`relative rounded-full px-4 py-1.5 text-xs sm:text-sm font-semibold transition-all duration-200 whitespace-nowrap ${
                   active
-                    ? 'bg-surface text-ink-strong shadow-sm font-semibold border border-rule-soft'
-                    : 'text-ink-muted hover:text-ink-strong hover:bg-surface/50'
+                    ? 'bg-surface text-accent shadow-xs border border-rule/60'
+                    : 'text-ink-muted hover:text-ink-strong hover:bg-surface/60'
                 }`}
               >
                 {link.label}
