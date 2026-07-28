@@ -33,21 +33,15 @@ export default function Navbar() {
       }`}
     >
       <div className="measure-wide flex h-16 items-center justify-between gap-6 px-4 sm:px-6">
-        {/* Wordmark & Live Badge */}
-        <div className="flex items-center gap-3 shrink-0">
-          <Link href="/" className="group flex items-center gap-1.5 shrink-0">
-            <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-white font-mono text-xs font-bold shadow-xs transition-transform duration-200 group-hover:scale-105">
-              TF
-            </span>
-            <span className="text-[1.25rem] font-bold tracking-tight text-ink-strong">
-              Token<span className="text-accent transition-colors duration-200 group-hover:text-accent-deep">Flight</span>
-            </span>
-          </Link>
-          <span className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-accent-soft border border-accent-ring/60 px-2.5 py-0.5 text-[0.6875rem] font-semibold text-accent-deep">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" />
-            AI Engineering
+        {/* Wordmark */}
+        <Link href="/" className="group flex items-center gap-1.5 shrink-0">
+          <span className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent text-white font-mono text-xs font-bold shadow-xs transition-transform duration-200 group-hover:scale-105">
+            TF
           </span>
-        </div>
+          <span className="text-[1.25rem] font-bold tracking-tight text-ink-strong">
+            Token<span className="text-accent transition-colors duration-200 group-hover:text-accent-deep">Flight</span>
+          </span>
+        </Link>
 
         {/* Primary navigation */}
         <nav className="flex items-center gap-1 rounded-full bg-paper-deep/90 p-1 border border-rule/80 shadow-xs">
