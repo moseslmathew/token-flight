@@ -7,25 +7,25 @@
 
 @theme {
   /* ── Surfaces ─────────────────────────────────────────── */
-  --color-paper: #ffffff;
-  --color-paper-deep: #f5f7f6;
+  --color-paper: #f8fafc;
+  --color-paper-deep: #f1f5f9;
   --color-surface: #ffffff;
 
   /* ── Ink — cool neutrals, tuned to clear 4.5:1 on white ─ */
-  --color-ink-strong: #0a0d0c;
-  --color-ink: #1f2523;
-  --color-ink-muted: #5a625e;
-  --color-ink-faint: #6e7671;
+  --color-ink-strong: #0f172a;
+  --color-ink: #334155;
+  --color-ink-muted: #64748b;
+  --color-ink-faint: #94a3b8;
 
   /* ── Rules & edges ────────────────────────────────────── */
-  --color-rule: #e3e7e5;
-  --color-rule-soft: #eef1f0;
+  --color-rule: #e2e8f0;
+  --color-rule-soft: #f1f5f9;
 
-  /* ── Accent: deep emerald ─────────────────────────────── */
-  --color-accent: #047857;
-  --color-accent-deep: #065f46;
-  --color-accent-soft: #ecfdf5;
-  --color-accent-ring: #a7f3d0;
+  /* ── Accent: Modern Tech Blue ─────────────────────────── */
+  --color-accent: #3b82f6;
+  --color-accent-deep: #2563eb;
+  --color-accent-soft: #eff6ff;
+  --color-accent-ring: #bfdbfe;
 
   /* ── Data counter-colour and warning ──────────────────── */
   --color-cool: #2563eb;

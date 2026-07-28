@@ -192,22 +192,22 @@ function ShareButton({ title, text, slug }: { title: string; text: string; slug:
   );
 }
 
-/* Three-part analysis, set as ruled columns rather than filled boxes */
+/* Three-part analysis, set as distinct boxes for better visual hierarchy */
 function Analysis({ item, dense = false }: { item: AINewsItem; dense?: boolean }) {
   const parts = [
-    { label: 'What changed', body: item.content.whatChanged, rule: 'border-accent' },
-    { label: 'Why it matters', body: item.content.whyItMatters, rule: 'border-cool' },
-    { label: 'Future impact', body: item.content.futureImpact, rule: 'border-ink-faint/50' },
+    { label: 'What changed', body: item.content.whatChanged, bg: 'bg-paper-deep text-ink-strong border border-rule/50' },
+    { label: 'Why it matters', body: item.content.whyItMatters, bg: 'bg-accent-soft text-accent-deep border border-accent-ring/50' },
+    { label: 'Future impact', body: item.content.futureImpact, bg: 'bg-surface border border-rule text-ink' },
   ];
 
   return (
-    <div className={dense ? 'grid gap-6 lg:grid-cols-3' : 'space-y-7'}>
+    <div className={dense ? 'grid gap-4 lg:grid-cols-3' : 'space-y-4'}>
       {parts.map((part) => (
-        <div key={part.label} className={`border-l-2 pl-4 sm:pl-5 ${part.rule}`}>
-          <span className="eyebrow block text-ink-muted">{part.label}</span>
+        <div key={part.label} className={`rounded-xl p-5 ${part.bg}`}>
+          <span className="eyebrow block mb-2 opacity-80">{part.label}</span>
           <p
-            className={`mt-2 leading-relaxed text-ink ${
-              dense ? 'text-[1rem]' : 'text-[1.0625rem]'
+            className={`leading-relaxed ${
+              dense ? 'text-[0.9375rem]' : 'text-[1.0625rem]'
             }`}
           >
             {part.body}
@@ -248,11 +248,11 @@ export default function LatestAINewsPage() {
     : filteredNews;
 
   return (
-    <div className="measure-wide px-4 pb-8 pt-6 sm:px-6 sm:pt-10">
+    <div className="measure-wide px-4 pb-12 pt-8 sm:px-6 sm:pt-12">
       {/* Masthead */}
-      <header className="animate-rise-in space-y-3">
-        <h1 className="text-h1 font-semibold text-ink-strong">Latest AI news</h1>
-        <p className="text-lede text-ink-muted">
+      <header className="animate-rise-in space-y-4 text-center">
+        <h1 className="text-display font-bold tracking-tight text-ink-strong">Latest AI news</h1>
+        <p className="text-lede text-ink-muted mx-auto max-w-2xl">
           Frontier model releases, research and infrastructure — each one read closely and reduced
           to what changed, why it matters, and where it leads.
         </p>
@@ -291,16 +291,12 @@ export default function LatestAINewsPage() {
 
       {/* Featured report */}
       {isAllSelected && featuredNews && (
-        <article id={featuredNews.slug} className="scroll-mt-28 border-b border-rule py-14">
-          <div className="space-y-5">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="eyebrow text-accent">Featured report</span>
-              <span className="text-ink-faint">·</span>
-              <span className="eyebrow text-ink-faint">{featuredNews.category}</span>
-              <span className="text-ink-faint">·</span>
-              <span className="text-meta text-ink-faint">{featuredNews.publishedAt}</span>
-              <span className="text-ink-faint">·</span>
-              <span className="text-meta text-ink-muted">{featuredNews.source}</span>
+        <article id={featuredNews.slug} className="scroll-mt-28 mt-12 rounded-2xl bg-surface p-6 shadow-sm border border-rule sm:p-10 transition-all hover:shadow-md">
+          <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-accent text-white px-2.5 py-0.5 text-[0.6875rem] font-bold uppercase tracking-wider">Featured</span>
+              <span className="rounded-full bg-paper-deep text-ink-muted border border-rule px-2.5 py-0.5 text-[0.6875rem] font-medium uppercase tracking-wider">{featuredNews.category}</span>
+              <span className="text-meta text-ink-faint ml-1">{featuredNews.publishedAt}</span>
             </div>
 
             <h2 className="text-display font-semibold text-ink-strong">
@@ -315,16 +311,18 @@ export default function LatestAINewsPage() {
           </div>
 
           {featuredNews.content.technicalHighlights && (
-            <div className="mt-10 border-t border-rule-soft pt-7">
-              <span className="eyebrow block text-ink-faint">Technical highlights</span>
-              <ul className="mt-4 space-y-2.5">
+            <div className="mt-8 border-t border-rule-soft pt-6">
+              <span className="eyebrow block text-ink-muted mb-3">Technical highlights</span>
+              <div className="flex flex-wrap gap-2">
                 {featuredNews.content.technicalHighlights.map((highlight, idx) => (
-                  <li key={idx} className="flex gap-3 text-[1.0625rem] text-ink">
-                    <span aria-hidden="true" className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-accent" />
-                    <span>{highlight}</span>
-                  </li>
+                  <span
+                    key={idx}
+                    className="rounded-full bg-accent-soft text-accent-deep border border-accent-ring/50 px-3 py-1 text-[0.875rem] font-medium"
+                  >
+                    {highlight}
+                  </span>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 
@@ -348,13 +346,12 @@ export default function LatestAINewsPage() {
       )}
 
       {/* Feed */}
-      <div className="divide-y divide-rule">
+      <div className="mt-8 space-y-6">
         {feedNews.map((item) => (
-          <article key={item.id} id={item.slug} className="scroll-mt-28 py-12">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span className="eyebrow text-accent">{item.category}</span>
-              <span className="text-ink-faint">·</span>
-              <span className="text-meta text-ink-faint">{item.publishedAt}</span>
+          <article key={item.id} id={item.slug} className="scroll-mt-28 rounded-2xl bg-surface p-6 shadow-sm border border-rule sm:p-8 transition-all hover:shadow-md">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="rounded-full bg-paper-deep text-ink-muted border border-rule px-2.5 py-0.5 text-[0.6875rem] font-medium uppercase tracking-wider">{item.category}</span>
+              <span className="text-meta text-ink-faint ml-1">{item.publishedAt}</span>
             </div>
 
             <h2 className="mt-4 text-h2 font-semibold text-ink-strong">
@@ -370,11 +367,11 @@ export default function LatestAINewsPage() {
             </div>
 
             {item.content.technicalHighlights && (
-              <div className="mt-7 flex flex-wrap gap-2">
+              <div className="mt-6 flex flex-wrap gap-2">
                 {item.content.technicalHighlights.map((highlight, hIdx) => (
                   <span
                     key={hIdx}
-                    className="rounded-full border border-rule px-3 py-1 text-meta text-ink-muted"
+                    className="rounded-full bg-accent-soft text-accent-deep border border-accent-ring/50 px-3 py-1 text-[0.8125rem] font-medium"
                   >
                     {highlight}
                   </span>

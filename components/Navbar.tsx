@@ -28,8 +28,8 @@ export default function Navbar() {
     <header
       className={`sticky top-0 z-50 transition-all duration-300 ${
         scrolled
-          ? 'bg-paper/90 backdrop-blur-md border-b border-rule shadow-xs'
-          : 'bg-paper/70 backdrop-blur-sm border-b border-rule/60'
+          ? 'bg-paper/90 backdrop-blur-md border-b border-rule shadow-sm'
+          : 'bg-paper/60 backdrop-blur-sm border-b border-transparent'
       }`}
     >
       <div className="measure-wide flex h-14 items-center justify-between gap-6 px-4 sm:px-6">
@@ -44,7 +44,7 @@ export default function Navbar() {
         </Link>
 
         {/* Primary navigation */}
-        <nav className="flex items-center gap-1 sm:gap-2 rounded-full bg-card/80 p-1 border border-rule/80">
+        <nav className="flex items-center gap-1 sm:gap-2 rounded-full bg-paper-deep/80 p-1 border border-rule">
           {NAV_LINKS.map((link) => {
             const active = link.match(pathname);
             return (
@@ -52,10 +52,10 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 aria-current={active ? 'page' : undefined}
-                className={`relative rounded-full px-4 py-1 text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
+                className={`relative rounded-full px-4 py-1.5 text-xs sm:text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                   active
-                    ? 'bg-paper text-ink-strong shadow-xs font-semibold'
-                    : 'text-ink-muted hover:text-ink-strong'
+                    ? 'bg-surface text-ink-strong shadow-sm font-semibold border border-rule-soft'
+                    : 'text-ink-muted hover:text-ink-strong hover:bg-surface/50'
                 }`}
               >
                 {link.label}
