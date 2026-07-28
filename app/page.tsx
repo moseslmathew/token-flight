@@ -309,20 +309,18 @@ export default function LatestAINewsPage() {
             id={featuredNews.slug}
             className="scroll-mt-28 mt-10 rounded-2xl bg-surface border border-rule p-6 sm:p-10 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)] hover:shadow-[0_12px_30px_-4px_rgba(15,23,42,0.08)] transition-all duration-300"
           >
-            <div className="space-y-4">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-md bg-accent text-white px-2.5 py-0.5 text-[0.6875rem] font-bold uppercase tracking-wider">
-                  Featured Report
-                </span>
-                <span className="rounded-md bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wider">
-                  {featuredNews.category}
-                </span>
-                <span className="text-meta text-ink-faint ml-1 font-medium">{featuredNews.publishedAt}</span>
-                <span className="text-meta text-ink-faint">·</span>
-                <span className="text-meta text-ink-muted font-medium">{featuredNews.source}</span>
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-x-2 text-xs text-ink-muted">
+                <span className="font-semibold text-accent">Featured</span>
+                <span>·</span>
+                <span className="font-medium text-ink-strong">{featuredNews.category}</span>
+                <span>·</span>
+                <span>{featuredNews.publishedAt}</span>
+                <span>·</span>
+                <span>{featuredNews.source}</span>
               </div>
 
-              <h2 className="text-[1.875rem] sm:text-[2.25rem] font-bold tracking-tight text-ink-strong leading-snug">
+              <h2 className="text-[1.75rem] sm:text-[2.125rem] font-bold tracking-tight text-ink-strong leading-snug">
                 {featuredNews.title}
               </h2>
 
@@ -333,21 +331,7 @@ export default function LatestAINewsPage() {
               <Analysis item={featuredNews} />
             </div>
 
-            {featuredNews.content.technicalHighlights && (
-              <div className="mt-8 border-t border-rule-soft pt-6">
-                <span className="eyebrow block text-ink-muted mb-3 font-semibold">Technical Highlights</span>
-                <div className="flex flex-wrap gap-2">
-                  {featuredNews.content.technicalHighlights.map((highlight, idx) => (
-                    <span
-                      key={idx}
-                      className="rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200/70 px-3 py-1 text-xs font-semibold"
-                    >
-                      {highlight}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+
 
             <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule-soft pt-6">
               <a
@@ -376,14 +360,13 @@ export default function LatestAINewsPage() {
               id={item.slug}
               className="scroll-mt-28 rounded-2xl bg-surface border border-rule p-6 sm:p-8 shadow-xs hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200"
             >
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="rounded-md bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wider">
-                  {item.category}
-                </span>
-                <span className="text-meta text-ink-faint ml-1 font-medium">{item.publishedAt}</span>
+              <div className="flex flex-wrap items-center gap-x-2 text-xs text-ink-muted">
+                <span className="font-semibold text-accent">{item.category}</span>
+                <span>·</span>
+                <span>{item.publishedAt}</span>
               </div>
 
-              <h2 className="mt-3.5 text-h2 font-bold tracking-tight text-ink-strong">
+              <h2 className="mt-3 text-h2 font-bold tracking-tight text-ink-strong">
                 {item.title}
               </h2>
 
@@ -395,18 +378,7 @@ export default function LatestAINewsPage() {
                 <Analysis item={item} dense />
               </div>
 
-              {item.content.technicalHighlights && (
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {item.content.technicalHighlights.map((highlight, hIdx) => (
-                    <span
-                      key={hIdx}
-                      className="rounded-full bg-slate-100/80 text-slate-700 border border-slate-200 px-3 py-1 text-xs font-medium"
-                    >
-                      {highlight}
-                    </span>
-                  ))}
-                </div>
-              )}
+
 
               <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-rule-soft pt-5">
                 <a

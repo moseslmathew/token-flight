@@ -14,11 +14,9 @@ export default function ArticleCard({ article, variant = 'row' }: ArticleCardPro
     return (
       <article className="paper-card group p-6 rounded-2xl bg-surface border border-rule shadow-xs hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200">
         <Link href={`/blog/${article.slug}`} className="block space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2 py-0.5 text-[0.6875rem] font-bold uppercase tracking-wider">
-              {article.category}
-            </span>
-            <span className="text-xs text-slate-400 font-medium">{article.publishedAt}</span>
+          <div className="flex items-center justify-between text-xs text-ink-muted">
+            <span className="font-semibold text-accent">{article.category}</span>
+            <span>{article.publishedAt}</span>
           </div>
 
           <h3 className="text-h3 font-bold text-ink-strong transition-colors duration-200 group-hover:text-accent">
@@ -43,16 +41,13 @@ export default function ArticleCard({ article, variant = 'row' }: ArticleCardPro
         className="block space-y-4"
       >
         {/* Meta Header */}
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2">
-            <span className="rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/60 px-2.5 py-0.5 text-[0.6875rem] font-bold uppercase tracking-wider">
-              {article.category}
-            </span>
-            <span className="rounded-md bg-slate-100 text-slate-700 border border-slate-200 px-2.5 py-0.5 text-[0.6875rem] font-semibold uppercase tracking-wider">
-              {article.difficulty}
-            </span>
+        <div className="flex items-center justify-between text-xs text-ink-muted">
+          <div className="flex items-center gap-1.5 font-medium">
+            <span className="font-semibold text-accent">{article.category}</span>
+            <span>·</span>
+            <span>{article.difficulty}</span>
           </div>
-          <span className="text-xs text-slate-400 font-medium">{article.publishedAt}</span>
+          <span>{article.publishedAt}</span>
         </div>
 
         {/* Body */}
