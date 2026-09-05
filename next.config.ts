@@ -3,7 +3,7 @@ import { PHASE_DEVELOPMENT_SERVER } from "next/constants";
 
 const nextConfig = (phase: string): NextConfig => ({
   // Keep production builds from overwriting assets used by the running dev server.
-  distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next" : ".next-build",
+  distDir: phase === PHASE_DEVELOPMENT_SERVER ? ".next-dev" : ".next",
   webpack: (config, { dev }) => {
     if (dev) {
       config.cache = false;
