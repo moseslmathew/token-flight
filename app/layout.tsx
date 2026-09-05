@@ -17,9 +17,9 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'TokenFlight — AI & Token Engineering Notes',
-  description: 'First-principles engineering notes, visual architectural breakdowns, and code implementations covering LLMs, Transformers, RAG, and Machine Learning.',
-  keywords: ['TokenFlight', 'AI Blog', 'Machine Learning', 'Transformers', 'LLM', 'Tokenization', 'BPE'],
+  title: 'TokenFlight — AI Products That Matter',
+  description: 'Thoughtful coverage of useful AI products, the people they serve, and the ideas shaping them.',
+  keywords: ['TokenFlight', 'AI Products', 'AI News', 'Artificial Intelligence', 'AI Guides'],
   icons: {
     icon: '/icon.svg',
     shortcut: '/icon.svg',

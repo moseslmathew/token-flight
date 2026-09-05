@@ -5,7 +5,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
 const NAV_LINKS = [
-  { href: '/', label: 'Latest AI News', match: (p: string) => p === '/' },
+  { href: '/', label: 'Products', match: (p: string) => p === '/' },
+  { href: '/news', label: 'News', match: (p: string) => p.startsWith('/news') },
   {
     href: '/learn',
     label: 'Learn',
@@ -44,7 +45,7 @@ export default function Navbar() {
         </Link>
 
         {/* Primary navigation */}
-        <nav className="flex items-center gap-1 rounded-full bg-paper-deep/90 p-1 border border-rule/80 shadow-xs">
+        <nav aria-label="Primary navigation" className="no-scrollbar flex max-w-[68vw] items-center gap-1 overflow-x-auto rounded-full bg-paper-deep/90 p-1 border border-rule/80 shadow-xs sm:max-w-none">
           {NAV_LINKS.map((link) => {
             const active = link.match(pathname);
             return (

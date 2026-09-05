@@ -15,6 +15,7 @@ import {
 } from './visuals/primitives';
 import { EMBEDDING_VISUALS } from './visuals/embeddings';
 import { BPE_VISUALS } from './visuals/bpe';
+import { GENERATIVE_MODELS_VISUALS } from './visuals/generative-models';
 
 /* ────────────────────────────────────────────────────────────
    1. Dense vs. Sparse — how much of the model wakes up
@@ -786,6 +787,7 @@ function MemoryVsCompute() {
 const VISUALS: Record<string, React.ComponentType> = {
   ...EMBEDDING_VISUALS,
   ...BPE_VISUALS,
+  ...GENERATIVE_MODELS_VISUALS,
   'moe-dense-vs-sparse': DenseVsSparse,
   'moe-router': RouterFlow,
   'moe-topk': TopKGrid,

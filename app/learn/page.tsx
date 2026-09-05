@@ -4,10 +4,10 @@ import React, { useState } from 'react';
 import ArticleCard from '@/components/ArticleCard';
 import { ARTICLES } from '@/lib/data/articles';
 
-const CATEGORIES = ['LLMs', 'Machine Learning'] as const;
+const CATEGORIES = ['Generative AI', 'LLMs', 'Machine Learning'] as const;
 
 export default function LearnPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string>('LLMs');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Generative AI');
 
   const filteredArticles = ARTICLES.filter((a) => a.category === selectedCategory);
 

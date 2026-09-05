@@ -3,7 +3,7 @@ export interface Article {
   slug: string;
   title: string;
   excerpt: string;
-  category: 'LLMs' | 'Machine Learning';
+  category: 'Generative AI' | 'LLMs' | 'Machine Learning';
   difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
   readTime?: string;
   publishedAt: string;
@@ -32,6 +32,250 @@ export interface Article {
 }
 
 export const ARTICLES: Article[] = [
+  {
+    id: 'genai-probability-engine',
+    slug: 'importance-of-probability-in-generative-ai',
+    title: 'The Possibility Engine: How Probability Actually Works in Generative AI',
+    excerpt: 'Why Generative AI is not a search engine or a calculator, but a machine of possibilities. An intuitive, visual look at how AI uses probability to think, create, and decide what comes next.',
+    category: 'Generative AI',
+    difficulty: 'Beginner',
+    readTime: '6 min read',
+    publishedAt: 'August 2026',
+    author: {
+      name: 'AI Engineering Team',
+      role: 'Research & Technical Writing',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    },
+    tags: ['Generative AI', 'Probability', 'Intuition', 'Creativity', 'Sampling'],
+    featured: true,
+    content: {
+      intro: 'When you ask a calculator "What is 2 + 2?", there is only one correct answer: 4. Classical software is built like a calculator — predictable, rigid, and strictly one-to-one.\n\nBut when you prompt a Generative AI "Write an opening sentence for a mystery novel", there is no single right answer. There are millions of valid, exciting possibilities!\n\nGenerative AI does not store finished answers in a database. Instead, it is a Possibility Engine. Probability is the exact mechanism that allows AI to weigh different ideas, introduce creativity, and decide what word, pixel, or note should come next.',
+      sections: [
+        {
+          heading: '1. Why Gen AI Cannot Work Like a Normal Computer Program',
+          body: 'Traditional software works on absolute rules:\n"If the user clicks this button, do exactly that action."\n\nIf Generative AI were built this way, it would be hopelessly boring and robotic:\n- Every time you asked for a story, you would get the exact same story word-for-word.\n- In text, it would get stuck in endless loops: "The system is a system that is a system..."\n- It could never adapt its tone, brainstorm alternatives, or explore unexpected connections.\n\nBy using probability, the AI doesn\'t just pick one hardcoded answer. It sees a spectrum of possibilities and makes an intelligent choice.',
+          keyTakeaway: 'Calculators retrieve one fixed answer. Generative AI considers a cloud of possibilities and samples a fresh path each time.',
+        },
+        {
+          heading: '2. Where Probability Sits Inside the AI Pipeline',
+          body: 'Every time you send a message or prompt to a generative model, it follows a 4-step journey:\n\n1. The Prompt (Input): The AI reads your starting words or image.\n2. The Neural Brain: The network scans its learned patterns from reading billions of sentences and scores every word in its vocabulary for how well it fits.\n3. The Probability Layer (The Heart of Gen AI): It converts those raw scores into percentage chances. For example, after "The magician pulled out a...", it might assign:\n   - 🐰 Rabbit: 60% chance\n   - 🕊️ Dove: 22% chance\n   - 🧣 Scarf: 11% chance\n   - 🦖 Dinosaur: 2% chance\n4. The Sampling Act: The AI rolls a weighted die based on those percentages to pick the winner, writes it down, and immediately repeats the loop for the next word!',
+          visual: 'probability-in-genai',
+          keyTakeaway: 'Probability sits right between the AI\'s brain and its final output. It is the bridge between raw pattern recognition and creative decision-making.',
+        },
+        {
+          heading: '3. The Creativity Dial: Why We Control Randomness',
+          body: 'Why don\'t we just always let the AI pick the #1 most likely word (the 60% rabbit)?\n\nBecause always picking the top choice makes the AI sound stiff and predictable. Probability gives us a "Creativity Dial" (often called Temperature or Randomness in AI settings):\n\n- Dial Turned Down (0% Randomness): The AI is forced to pick only the most common word. Best for writing clean Python code, solving math problems, or extracting structured data.\n- Dial in the Middle (50% Randomness): The AI mostly picks sensible words, but occasionally introduces natural variety — perfect for essays, emails, and conversation.\n- Dial Turned Up (90%+ Randomness): The AI gives rare, quirky words a fighting chance. Fantastic for creative brainstorming, poetry, and sci-fi world-building!',
+          keyTakeaway: 'You can adjust the probability dial depending on whether you need a strict factual assistant or a wild creative partner.',
+        },
+        {
+          heading: '4. Why AI Hallucinates (The Probability Explanation)',
+          body: 'People often ask: "If AI is so smart, why does it make things up?"\n\nUnderstanding probability explains hallucinations immediately:\n\nAn AI does not "know" what is objectively true in the real world. It only knows what words are statistically likely to follow each other.\n\nWhen you ask an AI an obscure question that it doesn\'t have clear patterns for, all of its candidate probabilities become flat and uncertain (e.g., 5 options all with ~20% chance). Because the AI must generate a response, it still rolls the dice and picks the most convincing-sounding words with complete confidence — even if they are factually fictional.',
+          keyTakeaway: 'Hallucination is not a bug in the code; it is a natural byproduct of a machine that generates text by sampling probabilities rather than verifying truth.',
+        },
+        {
+          heading: '5. Summary: Why Probability Matters Today',
+          body: 'Probability is what makes Generative AI feel alive. Without it:\n\n- AI could not compose poetry or generate diverse artwork.\n- AI could not explore multiple reasoning steps to solve complex riddles.\n- AI would be a rigid database rather than an adaptable, creative collaborator.\n\nWhenever you use an AI tool, remember: you are not querying a static library — you are guiding a living probability engine.',
+          keyTakeaway: 'Probability transforms artificial intelligence from a passive retrieval system into an active creation engine.',
+        },
+      ],
+      summary: 'Probability is the core foundation of Generative AI. It allows models to move beyond rigid calculator-like rules, evaluate multiple plausible next steps, and sample creative, diverse outputs tailored to your needs.',
+    },
+  },
+  {
+    id: 'genai-core-models',
+    slug: 'core-generative-ai-models-architectures-explained',
+    title: 'Core Generative AI Models: The 4 Architectures That Power AI Generation',
+    excerpt: 'An executive overview of the four foundational mathematical paradigms powering modern generative intelligence — VAEs, GANs, Autoregressive Transformers, and Diffusion Models.',
+    category: 'Generative AI',
+    difficulty: 'Beginner',
+    readTime: '6 min read',
+    publishedAt: 'August 2026',
+    author: {
+      name: 'AI Engineering Team',
+      role: 'Research & Technical Writing',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    },
+    tags: ['Generative AI', 'VAEs', 'GANs', 'Transformers', 'Diffusion Models', 'Overview'],
+    featured: true,
+    content: {
+      intro: 'All generative artificial intelligence — whether generating a photorealistic portrait, drafting code, writing an essay, or composing a song — solves the exact same foundational challenge: how do you model the complex probability distribution of real-world data, and then sample new, realistic examples from it that have never existed before?\n\nOver the past decade, AI research has coalesced around four core architectural families: Variational Autoencoders (VAEs), Generative Adversarial Networks (GANs), Autoregressive Transformers, and Denoising Diffusion Models. Every modern generative model is either one of these four, or a hybrid composed of them.',
+      sections: [
+        {
+          heading: '1. The High-Level Architecture Map',
+          body: 'The four core models differ not in their ultimate goal, but in the mathematical strategy they use to transform random noise or prompts into structured, realistic outputs.\n\nUse the interactive taxonomy explorer below to inspect the high-level mechanism of each architecture, compare their pipelines, and jump directly into their dedicated deep-dive breakdowns:',
+          visual: 'core-genai-taxonomy',
+          keyTakeaway: 'All 4 generative architectures turn noise into reality, but each uses a fundamentally different mathematical bridge.',
+        },
+        {
+          heading: '2. Variational Autoencoders (VAEs) — Smooth Latent Manifolds',
+          body: 'High-Level Intuition:\nImagine compressing a library of thousands of faces into a smooth map where every coordinate represents facial features (smile, glasses, lighting). A VAE turns messy data into a continuous mathematical landscape.\n\n- How it Generates: Encodes data into probability distributions (mean μ & variance σ), then samples a point and decodes it back into a crisp sample.\n- Superpower: Instant 1-step generation, smooth interpolation between concepts, and compact latent representation.\n- Primary Real-World Use: Latent image compression (e.g. the latent stage inside Stable Diffusion) and feature editing.\n\n👉 [Explore the Variational Autoencoders (VAE) Deep-Dive →](/blog/vae-variational-autoencoders-deep-dive)',
+          keyTakeaway: 'VAEs make latent space continuous and walkable, allowing smooth blending between distinct concepts.',
+        },
+        {
+          heading: '3. Generative Adversarial Networks (GANs) — The Minimax Game',
+          body: 'High-Level Intuition:\nThink of an art forger (the Generator) trying to paint a masterpiece from random noise, and an art detective (the Discriminator) trying to spot if it is authentic or fake. As they compete, the forger becomes extraordinarily skilled.\n\n- How it Generates: The Generator maps random noise z into a synthetic sample in a single forward pass, guided by the Discriminator\'s feedback.\n- Superpower: Blazing-fast real-time inference and razor-sharp textures.\n- Primary Real-World Use: Real-time image-to-image translation, deepfake synthesis, and high-speed texture rendering.\n\n👉 [Explore the Generative Adversarial Networks (GAN) Deep-Dive →](/blog/gan-generative-adversarial-networks-deep-dive)',
+          keyTakeaway: 'GANs do not optimize maximum likelihood directly; they use an adversarial neural network as a dynamic, self-improving critic.',
+        },
+        {
+          heading: '4. Autoregressive Transformers — Contextual Sequence Predictors',
+          body: 'High-Level Intuition:\nImagine an author who reads everything written so far, calculates the probability of every possible next word, rolls a weighted die to choose the best continuation, and repeats the process millions of times.\n\n- How it Generates: Uses Self-Attention to compute conditional probabilities for the next token given all preceding context: P(x_t | x_1, ..., x_{t-1}).\n- Superpower: Unmatched sequential reasoning, long-range context tracking, and massive pretraining scalability.\n- Primary Real-World Use: Large Language Models (ChatGPT, Claude, Gemini), code generation, and sequential multimodal modeling.\n\n👉 [Explore the Autoregressive Transformers Deep-Dive →](/blog/transformers-autoregressive-models-deep-dive)',
+          keyTakeaway: 'Transformers turn generation into sequential next-element probability prediction, excelling at code, language, and structured reasoning.',
+        },
+        {
+          heading: '5. Denoising Diffusion Models — Iterative Denoising from Chaos',
+          body: 'High-Level Intuition:\nImagine starting with a canvas of pure random television static. Step by step, the AI gently removes a tiny sliver of noise, gradually carving high-level outlines, then textures, and finally a crystal-clear photorealistic image.\n\n- How it Generates: Starts from pure Gaussian noise and iteratively runs a neural network over dozens of timesteps to subtract predicted noise.\n- Superpower: Class-leading photorealism, stable training without mode collapse, and unmatched visual fidelity.\n- Primary Real-World Use: Text-to-Image (Midjourney, Stable Diffusion, FLUX), video generation (Sora, Veo), and audio synthesis.\n\n👉 [Explore the Denoising Diffusion Models Deep-Dive →](/blog/diffusion-models-deep-dive)',
+          keyTakeaway: 'Diffusion breaks the risky leap of generation into dozens of small, controllable denoising steps from pure noise to reality.',
+        },
+        {
+          heading: '6. Architectural Trade-Off & Engineering Matrix',
+          body: 'No single architecture is universally superior. Engineering teams choose between these four paradigms based on clear speed, fidelity, and modality trade-offs:\n\n- Need instant 1-step generation for real-time video games or filters? → Use GANs.\n- Need smooth latent vector compression? → Use VAEs.\n- Need multi-step reasoning, text, or code? → Use Transformers.\n- Need class-leading photorealism for image and video synthesis? → Use Diffusion.',
+          visual: 'genai-tradeoff-matrix',
+          keyTakeaway: 'Modern AI increasingly combines these models as hybrids (e.g. Diffusion models with VAE latent encoders and Transformer attention backbones).',
+        },
+      ],
+      summary: 'All four core generative AI architectures — VAEs, GANs, Transformers, and Diffusion — share the same foundation of deep neural networks and probability distributions. Each architecture represents a distinct mathematical approach to creating reality from random noise.',
+    },
+  },
+  {
+    id: 'genai-vae-deep-dive',
+    slug: 'vae-variational-autoencoders-deep-dive',
+    title: 'Variational Autoencoders (VAEs) Deep-Dive: Latent Manifolds & Reconstruction',
+    excerpt: 'A first-principles visual deep-dive into Variational Autoencoders: understand encoder-decoder bottlenecks, the reparameterization trick, KL-divergence, and continuous latent space interpolation.',
+    category: 'Generative AI',
+    difficulty: 'Intermediate',
+    readTime: '8 min read',
+    publishedAt: 'August 2026',
+    author: {
+      name: 'AI Engineering Team',
+      role: 'Research & Technical Writing',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    },
+    tags: ['VAEs', 'Latent Space', 'Autoencoders', 'Probabilistic AI', 'Deep Learning'],
+    featured: false,
+    content: {
+      intro: 'Classical autoencoders compress high-dimensional inputs into a fixed bottleneck vector z. But because they map inputs to discrete points, their latent space is full of empty voids. Variational Autoencoders (VAEs) revolutionize this by encoding inputs as probability distributions, creating a continuous, smooth latent terrain where every coordinate decodes into a valid, realistic sample.',
+      sections: [
+        {
+          heading: '1. The Problem with Classical Autoencoders',
+          body: 'A classical autoencoder maps an image directly to a discrete coordinate vector in latent space. If you pick an arbitrary point between two known vectors, the decoder produces garbled noise because it never learned what exists in the empty spaces.\n\nVAEs resolve this by forcing the encoder to output a probability distribution (mean μ and variance σ), regularized toward a standard Gaussian distribution N(0, I).',
+          keyTakeaway: 'VAEs ensure the entire latent space is continuous, populated, and navigable.',
+        },
+        {
+          heading: '2. The Reparameterization Trick',
+          body: 'How do you backpropagate gradients through a random sampling step z ~ N(μ, σ²)?\n\nThe reparameterization trick extracts the stochastic randomness into an auxiliary noise variable ε ~ N(0, I):\n\nz = μ + σ ⊙ ε\n\nThis keeps the sampling non-deterministic while allowing standard backpropagation gradients to flow smoothly through μ and σ.',
+          codeSnippet: {
+            language: 'python',
+            code: `import torch
+import torch.nn as nn
+
+class VAEBottleneck(nn.Module):
+    def __init__(self, in_features, latent_dim):
+        super().__init__()
+        self.fc_mu = nn.Linear(in_features, latent_dim)
+        self.fc_logvar = nn.Linear(in_features, latent_dim)
+
+    def reparameterize(self, mu, logvar):
+        std = torch.exp(0.5 * logvar)
+        eps = torch.randn_like(std)
+        return mu + eps * std
+
+    def forward(self, x):
+        mu = self.fc_mu(x)
+        logvar = self.fc_logvar(x)
+        z = self.reparameterize(mu, logvar)
+        return z, mu, logvar`,
+          },
+          keyTakeaway: 'The reparameterization trick makes stochastic latent sampling fully differentiable.',
+        },
+      ],
+      summary: 'VAEs form the foundational bridge for continuous latent representation, serving as the core latent compression engine for modern diffusion models.',
+    },
+  },
+  {
+    id: 'genai-gan-deep-dive',
+    slug: 'gan-generative-adversarial-networks-deep-dive',
+    title: 'Generative Adversarial Networks (GANs) Deep-Dive: The Minimax Game',
+    excerpt: 'An in-depth visual breakdown of GANs: learn the zero-sum game between Generator and Discriminator, training dynamics, mode collapse, and modern single-step synthesis.',
+    category: 'Generative AI',
+    difficulty: 'Intermediate',
+    readTime: '8 min read',
+    publishedAt: 'August 2026',
+    author: {
+      name: 'AI Engineering Team',
+      role: 'Research & Technical Writing',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    },
+    tags: ['GANs', 'Adversarial Training', 'Minimax', 'Computer Vision', 'Deep Learning'],
+    featured: false,
+    content: {
+      intro: 'Introduced by Ian Goodfellow in 2014, Generative Adversarial Networks (GANs) recast generative modeling as a two-player minimax game. Rather than minimizing a static reconstruction loss, GANs pit a Generator against an adaptive Discriminator to synthesize hyper-sharp, realistic data.',
+      sections: [
+        {
+          heading: '1. The Minimax Game Formulation',
+          body: 'The Generator G takes a noise vector z ~ p_z and tries to fool the Discriminator D. The Discriminator D tries to correctly distinguish real training samples from synthetic fakes.\n\nmin_G max_D V(D, G) = E[log D(x)] + E[log(1 - D(G(z)))]\n\nAs both networks train in opposition, the Generator learns to output samples that match the real data distribution with sharp fidelity.',
+          keyTakeaway: 'The Discriminator acts as an adaptive, learned loss function that continuously penalizes unrealistic artifacts.',
+        },
+      ],
+      summary: 'GANs remain the gold standard for real-time 1-step neural rendering and interactive image editing.',
+    },
+  },
+  {
+    id: 'genai-transformer-deep-dive',
+    slug: 'transformers-autoregressive-models-deep-dive',
+    title: 'Autoregressive Transformers Deep-Dive: Self-Attention & Sequence Synthesis',
+    excerpt: 'Master how Transformers generate text and code: from causal self-attention masking and logit projection to temperature sampling and KV caching.',
+    category: 'LLMs',
+    difficulty: 'Intermediate',
+    readTime: '9 min read',
+    publishedAt: 'August 2026',
+    author: {
+      name: 'AI Engineering Team',
+      role: 'Research & Technical Writing',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    },
+    tags: ['Transformers', 'Self-Attention', 'LLMs', 'Autoregressive', 'Sampling'],
+    featured: false,
+    content: {
+      intro: 'Autoregressive Transformers treat generation as next-token probability prediction. Using self-attention across the full sequence history, models like GPT, Claude, and Gemini synthesize long-horizon text, code, and structured reasoning.',
+      sections: [
+        {
+          heading: '1. Causal Next-Token Prediction',
+          body: 'At each step t, the Transformer takes all previous tokens x_1, ..., x_{t-1} and computes the conditional probability distribution P(x_t | x_{<t}). By sampling a token and appending it to the context, the model writes sentences one step at a time.',
+          keyTakeaway: 'Transformers decompose joint probability distributions into sequential conditional steps.',
+        },
+      ],
+      summary: 'Transformers dominate discrete sequential reasoning and form the cognitive backbone of modern frontier AI.',
+    },
+  },
+  {
+    id: 'genai-diffusion-deep-dive',
+    slug: 'diffusion-models-deep-dive',
+    title: 'Denoising Diffusion Models Deep-Dive: Iterative Reverse SDEs & DiTs',
+    excerpt: 'Explore the mathematics of modern visual generation: forward noise schedules, reverse denoising U-Nets/DiTs, classifier-free guidance, and latent diffusion.',
+    category: 'Generative AI',
+    difficulty: 'Intermediate',
+    readTime: '9 min read',
+    publishedAt: 'August 2026',
+    author: {
+      name: 'AI Engineering Team',
+      role: 'Research & Technical Writing',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80',
+    },
+    tags: ['Diffusion Models', 'Denoising', 'DiT', 'Image Generation', 'Deep Learning'],
+    featured: false,
+    content: {
+      intro: 'Inspired by non-equilibrium thermodynamics, Diffusion Models formulate visual generation as the reverse of a gradual noise corruption process. By learning to subtract microscopic increments of noise, models like FLUX, Midjourney, and Sora achieve unmatched photorealism.',
+      sections: [
+        {
+          heading: '1. The Forward and Reverse Processes',
+          body: 'Forward Process (q): Adds Gaussian noise over T steps until the image becomes pure static.\nReverse Process (p_θ): A neural network predicts and subtracts the noise residual at each timestep, stepping backward from pure noise to a clean image.',
+          visual: 'diffusion-process',
+          keyTakeaway: 'Diffusion turns generation into a gentle ladder of iterative denoising steps.',
+        },
+      ],
+      summary: 'Diffusion models represent the state-of-the-art for high-fidelity perceptual generation across images, video, and audio.',
+    },
+  },
   {
     id: '1',
     slug: 'how-an-llm-gets-its-vocabulary-bpe-from-scratch',

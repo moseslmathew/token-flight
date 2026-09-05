@@ -19,6 +19,42 @@ export async function generateStaticParams() {
   }));
 }
 
+function renderBodyWithLinks(text: string) {
+  const linkRegex = /\[([^\]]+)\]\(([^)]+)\)/g;
+  if (!linkRegex.test(text)) {
+    return text;
+  }
+
+  const parts: React.ReactNode[] = [];
+  let lastIndex = 0;
+  let match: RegExpExecArray | null;
+  linkRegex.lastIndex = 0;
+
+  while ((match = linkRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    const label = match[1];
+    const href = match[2];
+    parts.push(
+      <Link
+        key={match.index}
+        href={href}
+        className="inline-flex items-center gap-1 font-bold text-accent hover:text-accent-deep underline decoration-accent/50 underline-offset-4 transition-colors"
+      >
+        {label}
+      </Link>
+    );
+    lastIndex = linkRegex.lastIndex;
+  }
+
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+
+  return parts;
+}
+
 export default async function ArticleDetail({ params }: ArticlePageProps) {
   const { slug } = await params;
   const article = ARTICLES.find((a) => a.slug === slug);
@@ -80,7 +116,9 @@ export default async function ArticleDetail({ params }: ArticlePageProps) {
             <section key={idx} className="mt-14">
               <div className="measure space-y-4">
                 <h2 className="text-h2 font-bold tracking-tight text-ink-strong">{sec.heading}</h2>
-                <p className="whitespace-pre-line text-body text-ink leading-relaxed">{sec.body}</p>
+                <p className="whitespace-pre-line text-body text-ink leading-relaxed">
+                  {renderBodyWithLinks(sec.body)}
+                </p>
               </div>
 
               {sec.visual && (

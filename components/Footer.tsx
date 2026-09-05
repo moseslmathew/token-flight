@@ -17,7 +17,7 @@ export default function Footer() {
               </span>
             </Link>
             <p className="max-w-xs text-xs leading-relaxed text-ink-muted">
-              First-principles engineering notes and real-time model dispatch for AI builders and researchers.
+              Thoughtful coverage of AI products that matter, plus the news and ideas behind them.
             </p>
           </div>
 
@@ -26,6 +26,9 @@ export default function Footer() {
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Navigation</span>
             <nav className="flex flex-col sm:items-center gap-2 text-sm font-medium text-ink-muted">
               <Link href="/" className="transition-colors hover:text-accent">
+                AI Products
+              </Link>
+              <Link href="/news" className="transition-colors hover:text-accent">
                 Latest AI News
               </Link>
               <Link href="/learn" className="transition-colors hover:text-accent">
@@ -38,7 +41,7 @@ export default function Footer() {
           <div className="space-y-2.5 sm:text-right">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Publication</span>
             <p className="text-xs font-medium text-slate-500">
-              Curated daily & updated automatically.
+              Products first. Technology in context.
             </p>
             <p className="text-xs text-slate-400">
               © {new Date().getFullYear()} TokenFlight Notes
