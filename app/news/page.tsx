@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useCallback } from 'react';
-import { AI_NEWS_ITEMS, AINewsItem } from '@/lib/data/news';
+import { AI_NEWS_ITEMS, AINewsItem, AINewsCategory, matchesNewsCategory } from '@/lib/data/news';
 import {
   ExternalLink,
   Share2,
@@ -239,30 +239,29 @@ function Analysis({ item, dense = false }: { item: AINewsItem; dense?: boolean }
 }
 
 export default function NewsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<AINewsCategory | null>(null);
 
-  const categories = [
+  const categories: { value: AINewsCategory | 'All'; label: string }[] = [
     { value: 'All', label: 'All stories' },
-    { value: 'Model Releases', label: 'Model releases' },
+    { value: 'Model Releases', label: 'Models' },
+    { value: 'Cybersecurity', label: 'Cybersecurity' },
     { value: 'Research & Architecture', label: 'Research' },
-    { value: 'Open Source', label: 'Open source' },
-    { value: 'Hardware & Compute', label: 'Hardware' },
-    { value: 'Industry & Policy', label: 'Industry & policy' },
   ];
 
   const activeCategories = categories.filter((cat) => {
-    if (cat.value === 'All') return true;
-    return AI_NEWS_ITEMS.some((n) => n.category === cat.value);
+    const value = cat.value;
+    if (value === 'All') return true;
+    return AI_NEWS_ITEMS.some((n) => matchesNewsCategory(n, value));
   });
 
   const filteredNews =
-    selectedCategory && selectedCategory !== 'All'
-      ? AI_NEWS_ITEMS.filter((item) => item.category === selectedCategory)
+    selectedCategory
+      ? AI_NEWS_ITEMS.filter((item) => matchesNewsCategory(item, selectedCategory))
       : AI_NEWS_ITEMS;
 
   const featuredNews = AI_NEWS_ITEMS.find((n) => n.featured) || AI_NEWS_ITEMS[0];
 
-  const isAllSelected = !selectedCategory || selectedCategory === 'All';
+  const isAllSelected = !selectedCategory;
   const feedNews = isAllSelected
     ? filteredNews.filter((item) => item.id !== featuredNews?.id)
     : filteredNews;
@@ -293,10 +292,11 @@ export default function NewsPage() {
 
           <div className="no-scrollbar filter-rail flex items-center gap-1 overflow-x-auto" role="group" aria-label="News topics">
             {activeCategories.map((cat) => {
+              const value = cat.value;
               const isSelected = cat.value === 'All' ? isAllSelected : selectedCategory === cat.value;
-              const storyCount = cat.value === 'All'
+              const storyCount = value === 'All'
                 ? AI_NEWS_ITEMS.length
-                : AI_NEWS_ITEMS.filter((item) => item.category === cat.value).length;
+                : AI_NEWS_ITEMS.filter((item) => matchesNewsCategory(item, value)).length;
 
               return (
                 <button
