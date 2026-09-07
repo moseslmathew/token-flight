@@ -6,7 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   ArrowUpRight,
   BookOpen,
-  LayoutGrid,
   Menu,
   Newspaper,
   X,
@@ -14,13 +13,6 @@ import {
 import styles from "./Navbar.module.css";
 
 const NAV_LINKS = [
-  {
-    href: "/",
-    label: "Products",
-    description: "Useful AI, reviewed",
-    icon: LayoutGrid,
-    match: (pathname: string) => pathname === "/",
-  },
   {
     href: "/news",
     label: "News",
