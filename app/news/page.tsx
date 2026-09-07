@@ -1,419 +1,683 @@
-'use client';
+"use client";
 
-import React, { useState, useCallback } from 'react';
-import { AI_NEWS_ITEMS, AINewsItem, AINewsCategory, matchesNewsCategory } from '@/lib/data/news';
+import { useEffect, useRef, useState } from "react";
 import {
-  ExternalLink,
-  Share2,
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  Bookmark,
   Check,
+  Clock3,
+  ExternalLink,
   Link2,
-  Twitter,
-  Linkedin,
-  Mail,
-} from 'lucide-react';
+  Search,
+  Share2,
+  X,
+} from "lucide-react";
+import {
+  AI_NEWS_ITEMS,
+  NEWS_LAST_CHECKED,
+  AINewsCategory,
+  AINewsItem,
+  matchesNewsCategory,
+} from "@/lib/data/news";
+import styles from "./news.module.css";
 
-function ShareButton({ title, text, slug }: { title: string; text: string; slug: string }) {
-  const [showMenu, setShowMenu] = useState(false);
-  const [copied, setCopied] = useState(false);
-
-  const getShareUrl = useCallback(() => {
-    if (typeof window !== 'undefined') {
-      return `${window.location.origin}/news#${slug}`;
-    }
-    return '';
-  }, [slug]);
-
-  const handleShareClick = useCallback(async () => {
-    const url = getShareUrl();
-    // Launch device native share sheet directly on mobile phones like native apps
-    if (typeof navigator !== 'undefined' && navigator.share) {
-      try {
-        await navigator.share({
-          title,
-          text,
-          url,
-        });
-        return;
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name === 'AbortError') return;
-      }
-    }
-    // Fallback for desktop or non-native share browsers
-    setShowMenu((v) => !v);
-  }, [title, text, getShareUrl]);
-
-  const handleCopyLink = useCallback(async () => {
-    const url = getShareUrl();
-    try {
-      await navigator.clipboard.writeText(url);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      const input = document.createElement('input');
-      input.value = url;
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand('copy');
-      document.body.removeChild(input);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    }
-  }, [getShareUrl]);
-
-  const shareToTwitter = useCallback(() => {
-    const url = getShareUrl();
-    window.open(
-      `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
-      '_blank',
-      'noopener,noreferrer'
-    );
-    setShowMenu(false);
-  }, [title, getShareUrl]);
-
-  const shareToLinkedIn = useCallback(() => {
-    const url = getShareUrl();
-    window.open(
-      `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-      '_blank',
-      'noopener,noreferrer'
-    );
-    setShowMenu(false);
-  }, [getShareUrl]);
-
-  const shareViaEmail = useCallback(() => {
-    const url = getShareUrl();
-    window.open(
-      `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`${text}\n\n${url}`)}`,
-      '_self'
-    );
-    setShowMenu(false);
-  }, [title, text, getShareUrl]);
-
+const TOPICS: { label: string; value: AINewsCategory | null }[] = [
+  { label: "All stories", value: null },
+  { label: "Models", value: "Model Releases" },
+  { label: "Cybersecurity", value: "Cybersecurity" },
+  { label: "Research", value: "Research & Architecture" },
+];
+const SAVED_KEY = "tokenflight.saved-news";
+const labels: Record<AINewsCategory, string> = {
+  "Model Releases": "Models",
+  Cybersecurity: "Cybersecurity",
+  "Research & Architecture": "Research",
+  "Open Source": "Open source",
+  "Hardware & Compute": "Infrastructure",
+  "Industry & Policy": "Industry",
+};
+const tones: Record<AINewsCategory, string> = {
+  "Model Releases": "green",
+  Cybersecurity: "orange",
+  "Research & Architecture": "blue",
+  "Open Source": "purple",
+  "Hardware & Compute": "sand",
+  "Industry & Policy": "slate",
+};
+function minutes(item: AINewsItem) {
+  return Math.max(
+    1,
+    Math.ceil(
+      [item.excerpt, ...Object.values(item.content).flat()]
+        .join(" ")
+        .split(/\s+/).length / 200,
+    ),
+  );
+}
+function Headline({ title }: { title: string }) {
   return (
-    <div className="relative inline-block">
-      <button
-        onClick={handleShareClick}
-        className="inline-flex cursor-pointer items-center gap-1.5 text-meta font-medium text-ink-muted transition-colors hover:text-accent"
-        aria-label={`Share ${title}`}
-      >
-        <Share2 className="h-3.5 w-3.5" />
-        <span>Share</span>
-      </button>
-
-      {showMenu && (
-        <>
-          {/* Backdrop */}
-          <div
-            className="fixed inset-0 z-40 bg-ink-strong/25 backdrop-blur-[1px] sm:bg-transparent sm:backdrop-blur-none"
-            onClick={() => setShowMenu(false)}
-          />
-
-          {/* Desktop dropdown */}
-          <div className="animate-share-menu-in absolute bottom-full right-0 z-50 mb-2 hidden w-56 overflow-hidden rounded-xl border border-rule bg-surface shadow-xl sm:block">
-            <div className="space-y-0.5 p-1.5">
-              <button
-                onClick={handleCopyLink}
-                className="flex w-full cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-meta text-ink transition-colors hover:bg-accent-soft hover:text-accent-deep"
-              >
-                <span className="flex items-center gap-2.5">
-                  <Link2 className="h-3.5 w-3.5 text-ink-faint" />
-                  Copy link
-                </span>
-                {copied && <Check className="h-3.5 w-3.5 text-accent" />}
-              </button>
-              <div className="my-0.5 border-t border-rule-soft" />
-              <button
-                onClick={shareToTwitter}
-                className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-meta text-ink transition-colors hover:bg-paper-deep"
-              >
-                <Twitter className="h-3.5 w-3.5 text-ink-faint" />
-                Share on X / Twitter
-              </button>
-              <button
-                onClick={shareToLinkedIn}
-                className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-meta text-ink transition-colors hover:bg-paper-deep"
-              >
-                <Linkedin className="h-3.5 w-3.5 text-ink-faint" />
-                Share on LinkedIn
-              </button>
-              <button
-                onClick={shareViaEmail}
-                className="flex w-full cursor-pointer items-center gap-2.5 rounded-lg px-3 py-2 text-meta text-ink transition-colors hover:bg-paper-deep"
-              >
-                <Mail className="h-3.5 w-3.5 text-ink-faint" />
-                Share via email
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile bottom sheet */}
-          <div className="animate-slide-up fixed inset-x-0 bottom-0 z-50 space-y-4 rounded-t-3xl border-t border-rule bg-surface p-5 shadow-2xl sm:hidden">
-            <div className="mx-auto h-1 w-10 rounded-full bg-rule" />
-
-            <div className="space-y-1 text-center">
-              <h3 className="text-h3 font-semibold text-ink-strong">Share report</h3>
-              <p className="line-clamp-1 text-meta text-ink-muted">{title}</p>
-            </div>
-
-            <div className="grid grid-cols-4 gap-3 pb-1 pt-2">
-              {[
-                {
-                  onClick: handleCopyLink,
-                  icon: copied ? <Check className="h-5 w-5 text-accent" /> : <Link2 className="h-5 w-5" />,
-                  label: copied ? 'Copied' : 'Copy link',
-                },
-                { onClick: shareToTwitter, icon: <Twitter className="h-5 w-5" />, label: 'X / Twitter' },
-                { onClick: shareToLinkedIn, icon: <Linkedin className="h-5 w-5" />, label: 'LinkedIn' },
-                { onClick: shareViaEmail, icon: <Mail className="h-5 w-5" />, label: 'Email' },
-              ].map((action) => (
-                <button
-                  key={action.label}
-                  onClick={action.onClick}
-                  className="flex cursor-pointer flex-col items-center gap-1.5 rounded-xl p-2 transition-colors hover:bg-paper-deep"
-                >
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-paper-deep text-ink">
-                    {action.icon}
-                  </span>
-                  <span className="text-[0.6875rem] text-ink-muted">{action.label}</span>
-                </button>
-              ))}
-            </div>
-
-            <button
-              onClick={() => setShowMenu(false)}
-              className="w-full cursor-pointer rounded-xl bg-paper-deep py-3 text-meta font-medium text-ink transition-colors hover:bg-rule"
-            >
-              Cancel
-            </button>
-          </div>
-        </>
+    <>
+      {title.split(/(\S*-\S*)/g).map((part, index) =>
+        part.includes("-") ? (
+          <span className={styles.keepTogether} key={index}>
+            {part}
+          </span>
+        ) : (
+          part
+        ),
       )}
+    </>
+  );
+}
+function StoryMeta({ item }: { item: AINewsItem }) {
+  return (
+    <div className={styles.meta}>
+      <span className={styles.category} data-tone={tones[item.category]}>
+        {labels[item.category]}
+      </span>
+      <span>{item.publishedAt.replace("September", "Sep")}</span>
+      <span className={styles.readTime}>
+        <Clock3 size={12} aria-hidden="true" />
+        {minutes(item)} min
+      </span>
     </div>
   );
 }
-
-/* Three-part analysis, set as distinct cards for optimal editorial visual hierarchy */
-function Analysis({ item, dense = false }: { item: AINewsItem; dense?: boolean }) {
-  const parts = [
-    {
-      label: 'What changed',
-      body: item.content.whatChanged,
-      containerStyle: 'bg-slate-50/80 border-slate-200/80 text-slate-800',
-      labelStyle: 'text-slate-500',
-    },
-    {
-      label: 'Why it matters',
-      body: item.content.whyItMatters,
-      containerStyle: 'bg-emerald-50/70 border-emerald-200/70 text-emerald-950',
-      labelStyle: 'text-emerald-700',
-    },
-    {
-      label: 'Future impact',
-      body: item.content.futureImpact,
-      containerStyle: 'bg-surface border-slate-200 text-slate-700',
-      labelStyle: 'text-slate-500',
-    },
-  ];
-
+function SaveButton({
+  item,
+  saved,
+  onSave,
+}: {
+  item: AINewsItem;
+  saved: boolean;
+  onSave: (id: string) => void;
+}) {
   return (
-    <div className={dense ? 'grid gap-3.5 lg:grid-cols-3' : 'grid gap-4 sm:grid-cols-3'}>
-      {parts.map((part) => (
-        <div
-          key={part.label}
-          className={`rounded-xl border p-4.5 sm:p-5 transition-colors ${part.containerStyle}`}
-        >
-          <span className={`eyebrow block text-[0.6875rem] font-bold tracking-wider mb-2 ${part.labelStyle}`}>
-            {part.label}
-          </span>
-          <p
-            className={`leading-relaxed ${
-              dense ? 'text-[0.9375rem]' : 'text-[1rem]'
-            }`}
+    <button
+      className={styles.iconButton}
+      aria-label={`${saved ? "Unsave" : "Save"} ${item.title}`}
+      aria-pressed={saved}
+      onClick={() => onSave(item.id)}
+      title={saved ? "Remove from saved stories" : "Save for later"}
+    >
+      <Bookmark
+        size={18}
+        fill={saved ? "currentColor" : "none"}
+        aria-hidden="true"
+      />
+    </button>
+  );
+}
+function ShareStory({ item }: { item: AINewsItem }) {
+  const [message, setMessage] = useState("");
+  const [url, setUrl] = useState("");
+  const menu = useRef<HTMLDetailsElement>(null);
+  useEffect(() => {
+    setUrl(`${window.location.origin}/news#${item.slug}`);
+  }, [item.slug]);
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(url);
+      setMessage("Link copied");
+    } catch {
+      setMessage("Copy the address from your browser to share this story.");
+    }
+    if (menu.current) menu.current.open = false;
+  }
+  return (
+    <div className={styles.shareWrap}>
+      <details ref={menu} className={styles.share}>
+        <summary>
+          <Share2 size={16} aria-hidden="true" />
+          Share
+        </summary>
+        <div className={styles.shareMenu}>
+          <button onClick={copy}>
+            <Link2 size={15} aria-hidden="true" />
+            Copy link
+          </button>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(item.title)}&url=${encodeURIComponent(url)}`}
           >
-            {part.body}
-          </p>
+            Share on X <ArrowUpRight size={14} />
+          </a>
+          <a
+            target="_blank"
+            rel="noopener noreferrer"
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`}
+          >
+            Share on LinkedIn <ArrowUpRight size={14} />
+          </a>
+          <a
+            href={`mailto:?subject=${encodeURIComponent(item.title)}&body=${encodeURIComponent(`${item.excerpt}\n\n${url}`)}`}
+          >
+            Share by email <ArrowUpRight size={14} />
+          </a>
         </div>
-      ))}
+      </details>
+      <span role="status" className={styles.shareStatus}>
+        {message}
+      </span>
     </div>
   );
 }
 
 export default function NewsPage() {
-  const [selectedCategory, setSelectedCategory] = useState<AINewsCategory | null>(null);
-
-  const categories: { value: AINewsCategory | 'All'; label: string }[] = [
-    { value: 'All', label: 'All stories' },
-    { value: 'Model Releases', label: 'Models' },
-    { value: 'Cybersecurity', label: 'Cybersecurity' },
-    { value: 'Research & Architecture', label: 'Research' },
-  ];
-
-  const activeCategories = categories.filter((cat) => {
-    const value = cat.value;
-    if (value === 'All') return true;
-    return AI_NEWS_ITEMS.some((n) => matchesNewsCategory(n, value));
+  const [topic, setTopic] = useState<AINewsCategory | null>(null);
+  const [query, setQuery] = useState("");
+  const [savedOnly, setSavedOnly] = useState(false);
+  const [saved, setSaved] = useState<string[]>([]);
+  const [notice, setNotice] = useState("");
+  const [activeStory, setActiveStory] = useState<AINewsItem | null>(null);
+  const dialog = useRef<HTMLDialogElement>(null);
+  const readerTitle = useRef<HTMLHeadingElement>(null);
+  const returnFocus = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    try {
+      const value: unknown = JSON.parse(
+        localStorage.getItem(SAVED_KEY) || "[]",
+      );
+      if (Array.isArray(value))
+        setSaved(
+          value.filter(
+            (id): id is string =>
+              typeof id === "string" &&
+              AI_NEWS_ITEMS.some((item) => item.id === id),
+          ),
+        );
+    } catch {
+      /* Reading works even if browser storage is unavailable. */
+    }
+    function syncHash() {
+      let slug = "";
+      try {
+        slug = decodeURIComponent(window.location.hash.slice(1));
+      } catch {
+        /* Ignore malformed links. */
+      }
+      setActiveStory(AI_NEWS_ITEMS.find((item) => item.slug === slug) || null);
+    }
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, []);
+  useEffect(() => {
+    const reader = dialog.current;
+    if (!reader) return;
+    if (!activeStory) {
+      if (reader.open) reader.close();
+      return;
+    }
+    if (!reader.open) reader.showModal();
+    reader.scrollTop = 0;
+    readerTitle.current?.focus({ preventScroll: true });
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [activeStory]);
+  function openStory(item: AINewsItem) {
+    if (!activeStory)
+      returnFocus.current =
+        document.activeElement instanceof HTMLElement
+          ? document.activeElement
+          : null;
+    window.history.pushState(
+      null,
+      "",
+      `${window.location.pathname}${window.location.search}#${item.slug}`,
+    );
+    setActiveStory(item);
+  }
+  function closeStory() {
+    window.history.replaceState(
+      null,
+      "",
+      `${window.location.pathname}${window.location.search}`,
+    );
+    setActiveStory(null);
+    dialog.current?.close();
+    returnFocus.current?.focus({ preventScroll: true });
+  }
+  function toggleSaved(id: string) {
+    const next = saved.includes(id)
+      ? saved.filter((value) => value !== id)
+      : [...saved, id];
+    setSaved(next);
+    try {
+      localStorage.setItem(SAVED_KEY, JSON.stringify(next));
+      setNotice(
+        next.includes(id)
+          ? "Story saved for later on this browser."
+          : "Story removed from saved stories.",
+      );
+    } catch {
+      setNotice(
+        "Saved for this visit. Your browser could not store it for later.",
+      );
+    }
+  }
+  const lead = AI_NEWS_ITEMS.find((item) => item.featured) || AI_NEWS_ITEMS[0];
+  const briefing = AI_NEWS_ITEMS.filter((item) => item.id !== lead?.id).slice(
+    0,
+    3,
+  );
+  const normalizedQuery = query.trim().toLowerCase();
+  const results = AI_NEWS_ITEMS.filter(
+    (item) =>
+      (!topic || matchesNewsCategory(item, topic)) &&
+      (!savedOnly || saved.includes(item.id)) &&
+      (!normalizedQuery ||
+        [
+          item.title,
+          item.excerpt,
+          item.source,
+          item.category,
+          ...Object.values(item.content).flat(),
+        ]
+          .join(" ")
+          .toLowerCase()
+          .includes(normalizedQuery)),
+  );
+  const showLead = !topic && !normalizedQuery && !savedOnly;
+  const feed = showLead
+    ? results.filter((item) => item.id !== lead?.id)
+    : results;
+  const lastCheckedDate = new Date(
+    NEWS_LAST_CHECKED + "T00:00:00Z",
+  ).toLocaleDateString("en-US", {
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+    timeZone: "UTC",
   });
-
-  const filteredNews =
-    selectedCategory
-      ? AI_NEWS_ITEMS.filter((item) => matchesNewsCategory(item, selectedCategory))
-      : AI_NEWS_ITEMS;
-
-  const featuredNews = AI_NEWS_ITEMS.find((n) => n.featured) || AI_NEWS_ITEMS[0];
-
-  const isAllSelected = !selectedCategory;
-  const feedNews = isAllSelected
-    ? filteredNews.filter((item) => item.id !== featuredNews?.id)
-    : filteredNews;
+  const nextStories = activeStory
+    ? AI_NEWS_ITEMS.filter((item) => item.id !== activeStory.id)
+        .sort(
+          (a, b) =>
+            Number(matchesNewsCategory(b, activeStory.category)) -
+            Number(matchesNewsCategory(a, activeStory.category)),
+        )
+        .slice(0, 2)
+    : [];
 
   return (
-    <div className="ambient-glow min-h-screen pb-16">
-      <div className="measure-wide px-4 pt-8 sm:px-6 sm:pt-12">
-        {/* Masthead */}
-        <header className="animate-rise-in space-y-3 text-center max-w-3xl mx-auto">
-          <h1 className="text-display font-extrabold tracking-tight text-ink-strong">
-            Latest AI News & Benchmarks
-          </h1>
-          <p className="text-lede text-ink-muted leading-relaxed">
-            Frontier model releases, architectural breakthroughs, and compute infrastructure — reduced to what changed, why it matters, and where it leads.
-          </p>
-        </header>
-
-        {/* Category filter */}
-        <section aria-labelledby="news-filter-label" className="mt-10 rounded-2xl border border-rule bg-surface/80 p-2.5 shadow-xs backdrop-blur-sm">
-          <div className="flex items-center justify-between gap-4 px-2 pb-2 pt-1">
-            <h2 id="news-filter-label" className="eyebrow text-ink-muted">
-              Filter news by topic
-            </h2>
-            <span className="shrink-0 text-xs text-ink-faint">
-              {filteredNews.length} {filteredNews.length === 1 ? 'story' : 'stories'}
+    <div className={styles.page}>
+      <div className={styles.container}>
+        <header className={styles.masthead}>
+          <div>
+            <div className={styles.kicker}>
+              <span />
+              THE TOKENFLIGHT BRIEFING
+            </div>
+            <h1>
+              Stay ahead.
+              <br className={styles.mobileBreak} /> <em>Go deeper.</em>
+            </h1>
+            <p>
+              The AI developments worth your attention. The context that makes
+              them matter.
+            </p>
+          </div>
+          <div className={styles.edition}>
+            <span>LAST CHECKED</span>
+            <strong><time dateTime={NEWS_LAST_CHECKED}>{lastCheckedDate}</time></strong>
+            <span>
+              {AI_NEWS_ITEMS.length} curated stories · Original sources linked
             </span>
           </div>
-
-          <div className="no-scrollbar filter-rail flex items-center gap-1 overflow-x-auto" role="group" aria-label="News topics">
-            {activeCategories.map((cat) => {
-              const value = cat.value;
-              const isSelected = cat.value === 'All' ? isAllSelected : selectedCategory === cat.value;
-              const storyCount = value === 'All'
-                ? AI_NEWS_ITEMS.length
-                : AI_NEWS_ITEMS.filter((item) => matchesNewsCategory(item, value)).length;
-
-              return (
-                <button
-                  key={cat.value}
-                  onClick={() => setSelectedCategory(cat.value === 'All' ? null : cat.value)}
-                  aria-pressed={isSelected}
-                  className={`inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-xs font-semibold transition-all duration-200 sm:text-sm ${
-                    isSelected
-                      ? 'bg-ink-strong text-white shadow-xs'
-                      : 'text-ink-muted hover:bg-paper-deep hover:text-ink-strong'
-                  }`}
-                >
-                  {cat.label}
-                  <span className={`rounded-md px-1.5 py-0.5 text-[0.625rem] leading-none ${
-                    isSelected ? 'bg-white/15 text-white' : 'bg-paper-deep text-ink-faint'
-                  }`}>
-                    {storyCount}
-                  </span>
-                </button>
-              );
-            })}
+        </header>
+        <section className={styles.tools} aria-label="Browse news">
+          <div className={styles.tabs} role="group" aria-label="News topics">
+            {TOPICS.map((tab) => (
+              <button
+                key={tab.label}
+                aria-pressed={topic === tab.value}
+                onClick={() => setTopic(tab.value)}
+                className={topic === tab.value ? styles.activeTab : ""}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+          <div className={styles.utilities}>
+            <label className={styles.search}>
+              <Search size={17} aria-hidden="true" />
+              <input
+                aria-label="Search stories"
+                placeholder="Search stories"
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+              />
+            </label>
+            <button
+              className={styles.savedFilter}
+              aria-pressed={savedOnly}
+              onClick={() => setSavedOnly(!savedOnly)}
+            >
+              <Bookmark
+                size={16}
+                fill={savedOnly ? "currentColor" : "none"}
+                aria-hidden="true"
+              />
+              Saved <span>{saved.length}</span>
+            </button>
           </div>
         </section>
-
-        {/* Featured report */}
-        {isAllSelected && featuredNews && (
-          <article
-            id={featuredNews.slug}
-            className="scroll-mt-28 mt-10 rounded-2xl bg-surface border border-rule p-6 sm:p-10 shadow-[0_4px_20px_-2px_rgba(15,23,42,0.04)] hover:shadow-[0_12px_30px_-4px_rgba(15,23,42,0.08)] transition-all duration-300"
+        {showLead && lead && (
+          <section
+            className={styles.topStories}
+            aria-label="Editor's selection"
           >
-            <div className="space-y-3">
-              <div className="flex flex-wrap items-center gap-x-2 text-xs text-ink-muted">
-                <span className="font-semibold text-accent">Featured</span>
-                <span>·</span>
-                <span className="font-medium text-ink-strong">{featuredNews.category}</span>
-                <span>·</span>
-                <span>{featuredNews.publishedAt}</span>
-                <span>·</span>
-                <span>{featuredNews.source}</span>
+            <article className={styles.lead}>
+              <div className={styles.leadTop}>
+                <span className={styles.leadLabel}>
+                  <span />
+                  THE BIG STORY
+                </span>
+                <SaveButton
+                  item={lead}
+                  saved={saved.includes(lead.id)}
+                  onSave={toggleSaved}
+                />
               </div>
-
-              <h2 className="text-[1.75rem] sm:text-[2.125rem] font-bold tracking-tight text-ink-strong leading-snug">
-                {featuredNews.title}
-              </h2>
-
-              <p className="text-lede text-ink-muted leading-relaxed">{featuredNews.excerpt}</p>
-            </div>
-
-            <div className="mt-8">
-              <Analysis item={featuredNews} />
-            </div>
-
-
-
-            <div className="mt-8 flex flex-wrap items-center justify-between gap-4 border-t border-rule-soft pt-6">
-              <a
-                href={featuredNews.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-accent-deep"
-              >
-                Read the original release
-                <ExternalLink className="h-4 w-4" />
-              </a>
-              <ShareButton
-                title={featuredNews.title}
-                text={featuredNews.excerpt}
-                slug={featuredNews.slug}
-              />
-            </div>
-          </article>
-        )}
-
-        {/* Feed */}
-        <div className="mt-8 space-y-6">
-          {feedNews.map((item) => (
-            <article
-              key={item.id}
-              id={item.slug}
-              className="scroll-mt-28 rounded-2xl bg-surface border border-rule p-6 sm:p-8 shadow-xs hover:shadow-md hover:border-slate-300 hover:-translate-y-0.5 transition-all duration-200"
-            >
-              <div className="flex flex-wrap items-center gap-x-2 text-xs text-ink-muted">
-                <span className="font-semibold text-accent">{item.category}</span>
-                <span>·</span>
-                <span>{item.publishedAt}</span>
-              </div>
-
-              <h2 className="mt-3 text-h2 font-bold tracking-tight text-ink-strong">
-                {item.title}
-              </h2>
-
-              <p className="mt-2.5 text-[1.0625rem] leading-relaxed text-ink-muted">
-                {item.excerpt}
-              </p>
-
-              <div className="mt-7">
-                <Analysis item={item} dense />
-              </div>
-
-
-
-              <div className="mt-7 flex flex-wrap items-center justify-between gap-4 border-t border-rule-soft pt-5">
-                <a
-                  href={item.sourceUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-accent transition-colors hover:text-accent-deep"
+              <div className={styles.leadBody}>
+                <span className={styles.leadSource}>
+                  {lead.source}
+                  <span>/</span>
+                  {labels[lead.category]}
+                </span>
+                <h2>
+                  <button onClick={() => openStory(lead)}>
+                    <Headline title={lead.title} />
+                  </button>
+                </h2>
+                <p>{lead.excerpt}</p>
+                <button
+                  className={styles.leadCta}
+                  onClick={() => openStory(lead)}
                 >
-                  Source: {item.source}
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
-                <ShareButton title={item.title} text={item.excerpt} slug={item.slug} />
+                  Read the briefing{" "}
+                  <ArrowUpRight size={18} aria-hidden="true" />
+                </button>
+              </div>
+              <div className={styles.leadBottom}>
+                <span>{lead.publishedAt}</span>
+                <span>
+                  <Clock3 size={13} aria-hidden="true" />
+                  {minutes(lead)} min read
+                </span>
+                <span className={styles.leadCaption}>
+                  Ideas. Capabilities. What comes next.
+                </span>
+              </div>
+              <div className={styles.orbit} aria-hidden="true">
+                <i />
+                <i />
+                <i />
               </div>
             </article>
-          ))}
-        </div>
+            <aside className={styles.briefing}>
+              <div className={styles.briefingHead}>
+                <span className={styles.kicker}>ALSO ON THE RADAR</span>
+                <ArrowDown size={17} aria-hidden="true" />
+              </div>
+              <h2>
+                A few minutes.
+                <br />A wider perspective.
+              </h2>
+              <ol>
+                {briefing.map((item, index) => (
+                  <li key={item.id}>
+                    <span className={styles.number}>0{index + 1}</span>
+                    <div>
+                      <span className={styles.radarCategory}>
+                        {labels[item.category]}
+                      </span>
+                      <button onClick={() => openStory(item)}>
+                        {item.title}
+                        <ArrowUpRight size={15} aria-hidden="true" />
+                      </button>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <a href="#stories" className={styles.radarLink}>
+                Explore all stories <ArrowDown size={15} aria-hidden="true" />
+              </a>
+            </aside>
+          </section>
+        )}
+        <section
+          id="stories"
+          className={styles.feed}
+          aria-labelledby="stories-heading"
+        >
+          <div className={styles.feedHeading}>
+            <div>
+              <span className={styles.kicker}>
+                {savedOnly ? "YOUR READING LIST" : "WORTH A CLOSER LOOK"}
+              </span>
+              <h2 id="stories-heading">
+                {savedOnly
+                  ? "Saved for later"
+                  : normalizedQuery
+                    ? "Search results"
+                    : topic
+                      ? labels[topic]
+                      : "The latest, in perspective"}
+                <span className={styles.resultCount} aria-live="polite">
+                  {feed.length} {feed.length === 1 ? "story" : "stories"}
+                </span>
+              </h2>
+            </div>
+            <span className={styles.feedHint}>
+              {savedOnly
+                ? "Saved on this browser"
+                : "A quick read. A clearer picture."}
+            </span>
+          </div>
+          {feed.length ? (
+            <div className={styles.storyGrid}>
+              {feed.map((item) => (
+                <article key={item.id} className={styles.story}>
+                  <div className={styles.storyTop}>
+                    <StoryMeta item={item} />
+                    <SaveButton
+                      item={item}
+                      saved={saved.includes(item.id)}
+                      onSave={toggleSaved}
+                    />
+                  </div>
+                  <h3>
+                    <button onClick={() => openStory(item)}>
+                      <Headline title={item.title} />
+                    </button>
+                  </h3>
+                  <p>{item.excerpt}</p>
+                  <div className={styles.storyBottom}>
+                    <span className={styles.source}>
+                      <span aria-hidden="true">{item.source.charAt(0)}</span>
+                      {item.source}
+                    </span>
+                    <button
+                      onClick={() => openStory(item)}
+                      aria-label={`Read ${item.title}`}
+                    >
+                      Read story <ArrowUpRight size={17} aria-hidden="true" />
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          ) : (
+            <div className={styles.empty}>
+              {savedOnly ? (
+                <Bookmark size={28} aria-hidden="true" />
+              ) : (
+                <Search size={28} aria-hidden="true" />
+              )}
+              <h3>
+                {savedOnly && !saved.length
+                  ? "Keep a good story for later."
+                  : "No stories found."}
+              </h3>
+              <p>
+                {savedOnly && !saved.length
+                  ? "Use the bookmark beside any headline to build your reading list."
+                  : "Try a different search or browse all topics."}
+              </p>
+              <button
+                className={styles.solidButton}
+                onClick={() => {
+                  setQuery("");
+                  setTopic(null);
+                  setSavedOnly(false);
+                }}
+              >
+                Browse all stories <ArrowRight size={16} aria-hidden="true" />
+              </button>
+            </div>
+          )}
+          <div className={styles.endNote}>
+            <span className={styles.endMark}>TF</span>
+            <p>
+              Stay curious. Stay informed.
+              <br />
+              <span>
+                You’re reading a curated selection, with every story linked to
+                its source.
+              </span>
+            </p>
+            <a href="#main">Back to top ↑</a>
+          </div>
+        </section>
       </div>
+      <div role="status" className={styles.srOnly}>
+        {notice}
+      </div>
+      <dialog
+        ref={dialog}
+        className={styles.reader}
+        aria-labelledby="reader-title"
+        onCancel={(event) => {
+          event.preventDefault();
+          closeStory();
+        }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) closeStory();
+        }}
+      >
+        {activeStory && (
+          <div className={styles.readerInner}>
+            <div className={styles.readerToolbar}>
+              <span>THE TOKENFLIGHT BRIEFING</span>
+              <div>
+                <SaveButton
+                  item={activeStory}
+                  saved={saved.includes(activeStory.id)}
+                  onSave={toggleSaved}
+                />
+                <button
+                  className={styles.iconButton}
+                  onClick={closeStory}
+                  aria-label="Close story"
+                >
+                  <X size={21} />
+                </button>
+              </div>
+            </div>
+            <div className={styles.readerContent}>
+              <StoryMeta item={activeStory} />
+              <h2 id="reader-title" ref={readerTitle} tabIndex={-1}>
+                <Headline title={activeStory.title} />
+              </h2>
+              <p className={styles.readerExcerpt}>{activeStory.excerpt}</p>
+              <div className={styles.readerByline}>
+                <span>Source · {activeStory.source}</span>
+                <ShareStory key={activeStory.id} item={activeStory} />
+              </div>
+              <div className={styles.analysis}>
+                {[
+                  {
+                    label: "What happened",
+                    body: activeStory.content.whatChanged,
+                  },
+                  {
+                    label: "Why it matters",
+                    body: activeStory.content.whyItMatters,
+                  },
+                  {
+                    label: "What comes next",
+                    body: activeStory.content.futureImpact,
+                  },
+                ].map((part, index) => (
+                  <section
+                    key={part.label}
+                    className={index === 1 ? styles.whyMatters : ""}
+                  >
+                    <span className={styles.sectionNumber}>0{index + 1}</span>
+                    <div>
+                      <h3>{part.label}</h3>
+                      <p>{part.body}</p>
+                    </div>
+                  </section>
+                ))}
+              </div>
+              {!!activeStory.content.technicalHighlights?.length && (
+                <section className={styles.highlights}>
+                  <h3>The details to know</h3>
+                  <ul>
+                    {activeStory.content.technicalHighlights.map((point) => (
+                      <li key={point}>
+                        <Check size={15} aria-hidden="true" />
+                        <span>{point}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+              <a
+                className={styles.sourceLink}
+                href={activeStory.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <span>
+                  GO TO THE SOURCE
+                  <strong>Read the original at {activeStory.source}</strong>
+                </span>
+                <ExternalLink size={19} aria-hidden="true" />
+              </a>
+              <section className={styles.readNext}>
+                <span className={styles.kicker}>KEEP EXPLORING</span>
+                <h3>Next on your reading list</h3>
+                {nextStories.map((item) => (
+                  <button key={item.id} onClick={() => openStory(item)}>
+                    <span>
+                      <small>
+                        {labels[item.category]} · {minutes(item)} min read
+                      </small>
+                      {item.title}
+                    </span>
+                    <ArrowRight size={20} aria-hidden="true" />
+                  </button>
+                ))}
+              </section>
+            </div>
+          </div>
+        )}
+      </dialog>
     </div>
   );
 }
